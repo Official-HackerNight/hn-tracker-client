@@ -1,0 +1,14 @@
+<div class="lifeTime">
+  <h4>Lifetime Expense</h4>
+  <ul>
+    <br> Spent to Date: {{totalSpentLifetime | currency}}
+    <br> Daily Spent: {{spentPerDay | currency}}
+  </ul>
+
+  <div id="lifetime-expenses">
+    <h4>User's Lifetime Expenses</h4>
+    <div *ngFor="let ltExpense of lifetimeExpenses">
+      <p> expense: {{ ltExpense.amount }}</p>
+    </div>
+  </div>
+</div>

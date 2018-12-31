@@ -1,0 +1,14 @@
+<div class="yearToDate">
+  <div>
+    <h4>Year-to-date</h4>
+    <ul>
+      <br>Day of the Year: {{dayOfYear}}
+      <br> Spent to Date: {{totalSpentForYear | currency}}
+      <br> Daily Spent: {{spentPerDay | currency}}
+    </ul>
+  </div>
+  <div (click)="showYtdExpense=!showYtdExpense">
+    Show ytd expense
+    <app-ytd-expense *ngIf="showYtdExpense"></app-ytd-expense>
+  </div>
+</div>
