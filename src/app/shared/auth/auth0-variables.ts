@@ -8,6 +8,6 @@ interface AuthConfig {
 export const AUTH_CONFIG: AuthConfig = {
   clientID: 'YCa2J7lsnKZSEqkLsU02lgwjYDmQKRTN',
   domain: 'hacker-night.auth0.com',
-  callbackURL: 'http://localhost:3000/callback',
+  callbackURL: 'http://localhost:4201/callback',
   apiUrl: 'localhost:3000'
 };

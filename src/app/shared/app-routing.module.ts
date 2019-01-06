@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from '../routes/dashboard/dashboard.component';
 import { ExpenseComponent } from '../routes/expense/expense.component';
 import { AuthGuardService } from './auth/auth-guard.service';
+import { CallbackComponent } from './callback/callback.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent},
   { path: 'dashboard', component: DashboardComponent},
+  { path: 'callback', component: CallbackComponent},
   {
     path: 'expense',
     component: ExpenseComponent,

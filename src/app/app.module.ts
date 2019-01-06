@@ -15,13 +15,15 @@ import { ScopeGuardService } from './shared/auth/scope-guard.service';
 import { ExpenseModule } from './routes/expense/expense.module';
 import { LoginComponent } from './routes/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CallbackComponent } from './shared/callback/callback.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     NavComponent,
-    LoginComponent
+    LoginComponent,
+    CallbackComponent
   ],
   imports: [
     BrowserModule,

@@ -46,9 +46,9 @@ export class AuthService {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.localLogin(authResult);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
       } else if (err) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/dashboard']);
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
@@ -115,9 +115,18 @@ export class AuthService {
     return new Date().getTime() < this._expiresAt;
   }
 
+  /**
+   * Checks _scopes
+   * returns null if none
+   * @param scopes pulled from Auth0
+   */
   public userHasScopes(scopes: Array<string>): boolean {
-    const grantedScopes = JSON.parse(this._scopes).split(' ');
-    return scopes.every(scope => grantedScopes.includes(scope));
+    if (this._scopes) {
+      const grantedScopes = JSON.parse(this._scopes).split(' ');
+      return scopes.every(scope => grantedScopes.includes(scope));
+    } else {
+      return null;
+    }
   }
 
 }
