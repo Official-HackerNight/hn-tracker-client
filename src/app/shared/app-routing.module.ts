@@ -12,6 +12,7 @@ const routes: Routes = [
   {
     path: 'expense',
     component: ExpenseComponent,
+    canActivate: [AuthGuardService],
     children: [
       { path: 'expense', loadChildren: '../routes/expense/expense.module#ExpenseModule' },
       // { path: '**', pathMatch: 'full', redirectTo: '/dashboard', canActivate: [AuthGuardService] }

@@ -5,12 +5,17 @@
       [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary" >Menu</mat-toolbar>
     <mat-nav-list>
-        <span *ngIf="auth.userHasScopes(['write:messages'])">
-          <a routerLink="/admin">admin area</a>
-          <a mat-list-item routerLink="/expense" >Expenses</a>
-          <a mat-list-item href="#">Link 2</a>
-        </span>
-      <a mat-list-item href="#">Link 3</a>
+      <a mat-list-item routerLink="/dashboard">Dashboard</a>
+      <span *ngIf="auth.userHasScopes(['write:messages'])">
+        <a mat-list-item routerLink="/expense" >Expenses</a>
+        <a mat-list-item href="#">Link 2</a>
+      </span>
+
+      <!-- Admin feature TODO-->
+      <span *ngIf="auth.userHasScopes(['admin:messages'])">
+        <a routerLink="/admin">admin</a>
+      </span>
+      <!-- Admin END-->
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

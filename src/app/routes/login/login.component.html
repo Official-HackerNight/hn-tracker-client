@@ -1,5 +1,6 @@
 <h4 *ngIf="auth.isAuthenticated()">
-    Welcome "Temp Steve"
+    Welcome "Temp Steve,"
+    <a (click)="auth.logout()">Logout</a>
 </h4>
 <h4 *ngIf="!auth.isAuthenticated()">
   <a (click)="auth.login()">Login</a>
