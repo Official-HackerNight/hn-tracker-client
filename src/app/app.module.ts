@@ -16,7 +16,7 @@ import { ExpenseModule } from './routes/expense/expense.module';
 import { LoginComponent } from './routes/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CallbackComponent } from './shared/callback/callback.component';
-
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +37,8 @@ import { CallbackComponent } from './shared/callback/callback.component';
     MatIconModule,
     MatListModule,
     BrowserAnimationsModule,
-    NgMaterialModule
+    NgMaterialModule,
+    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG})
   ],
   providers: [
     ScopeGuardService,

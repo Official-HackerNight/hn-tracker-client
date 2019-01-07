@@ -3,6 +3,7 @@ import { AUTH_CONFIG } from './auth0-variables';
 import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import 'rxjs';
+import { NGXLogger } from 'ngx-logger';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +25,7 @@ export class AuthService {
     scope: this.requestedScopes
   });
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private logger: NGXLogger) {
     this._idToken = '';
     this._accessToken = '';
     this._expiresAt = 0;
@@ -32,6 +33,7 @@ export class AuthService {
   }
 
   get accessToken(): string {
+    this.logger.info('auth.accessToken() ' + this._accessToken);
     return this._accessToken;
   }
 
@@ -40,15 +42,20 @@ export class AuthService {
   }
 
   public login(): void {
+    this.logger.info('auth.login() ');
     this.auth0.authorize();
   }
 
   public handleAuthentication(): void {
+    this.logger.log('auth.handleAuthentication() ' );
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        this.logger.log('auth.handleAuthentication() authResult ' + authResult );
+        this.logger.log('auth.handleAuthentication() authResult.accessToken ' + authResult.accessToken );
         this.localLogin(authResult);
         this.router.navigate(['/dashboard']);
       } else if (err) {
+        this.logger.log('auth.handleAuthentication authResult/accessToken/idToken == null ');
         this.router.navigate(['/dashboard']);
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
@@ -57,6 +64,7 @@ export class AuthService {
   }
 
   public getProfile(cb): void {
+    this.logger.info('auth.getProfile(cb) ');
     if (!this._accessToken) {
       throw new Error('Access token must exist to fetch profile');
     }
@@ -71,6 +79,7 @@ export class AuthService {
   }
 
   private localLogin(authResult): void {
+    this.logger.info('auth.localLogin() ');
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
     // Set the time that the access token will expire at
@@ -88,6 +97,7 @@ export class AuthService {
   }
 
   public renewTokens(): void {
+    this.logger.info('auth.renewTokens ');
     this.auth0.checkSession({}, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.localLogin(authResult);
@@ -99,6 +109,7 @@ export class AuthService {
   }
 
   public logout(): void {
+    this.logger.info('auth.logout() ');
     // Remove tokens and expiry time
     this._idToken = '';
     this._accessToken = '';
@@ -111,6 +122,7 @@ export class AuthService {
   }
 
   public isAuthenticated(): boolean {
+    this.logger.info('auth.isAuthenticated() ');
     // Check whether the current time is past the
     // access token's expiry time
     return new Date().getTime() < this._expiresAt;
@@ -122,6 +134,7 @@ export class AuthService {
    * @param scopes pulled from Auth0
    */
   public userHasScopes(scopes: Array<string>): boolean {
+    this.logger.info('auth.userHasScopes() ');
     if (this._scopes) {
       const grantedScopes = JSON.parse(this._scopes).split(' ');
       return scopes.every(scope => grantedScopes.includes(scope));
