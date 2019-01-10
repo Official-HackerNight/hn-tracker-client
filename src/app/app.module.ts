@@ -17,13 +17,15 @@ import { LoginComponent } from './routes/login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CallbackComponent } from './shared/callback/callback.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { ProfileComponent } from './routes/profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
     NavComponent,
     LoginComponent,
-    CallbackComponent
+    CallbackComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
