@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import * as auth0 from 'auth0-js';
 import 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, timer,  } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
 /**
  * Auth0-js Service
  * Docs: https://auth0.github.io/auth0.js/index.html
@@ -73,12 +71,12 @@ export class AuthService {
         console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       } else {
-        // this.logger.info('localstorage length ' + localStorage.length);
-        // this.logger.info(localStorage);
-        // if (localStorage.length > 1) {
-        //   this.logger.info('getting localAuth');
-        //   this.localLogin(JSON.parse(localStorage.getItem('localAuth')));
-        // }
+        this.logger.info('localstorage length ' + localStorage.length);
+        this.logger.info(localStorage);
+        if (localStorage.length > 1) {
+          this.logger.info('getting localAuth');
+          this.localLogin(JSON.parse(localStorage.getItem('localAuth')));
+        }
       }
     });
   }
@@ -115,13 +113,12 @@ export class AuthService {
     this._expiresAt = expiresAt;
     this._scopes = JSON.stringify(scopes);
 
-    // this.scheduleRenewal();
-    // localStorage.setItem('localAuth', JSON.stringify({
-    //   accessToken: authResult.accessToken,
-    //   idToken: authResult.idToken,
-    //   expiresIn: expiresAt,
-    //   scopes: JSON.stringify(scopes)
-    // }));
+    localStorage.setItem('localAuth', JSON.stringify({
+      accessToken: authResult.accessToken,
+      idToken: authResult.idToken,
+      expiresIn: expiresAt,
+      scopes: JSON.stringify(scopes)
+    }));
   }
 
   public renewTokens(): void {
@@ -172,35 +169,5 @@ export class AuthService {
       return null;
     }
   }
-
-  // public scheduleRenewal() {
-  //   if (!this.isAuthenticated()) { return; }
-  //   this.unscheduleRenewal();
-
-  //   const expiresAt = this._expiresAt;
-
-  //   const source = of(expiresAt).mergeMap(
-  //     expiresAt => {
-
-  //       const now = Date.now();
-
-  //       // Use the delay in a timer to
-  //       // run the refresh at the proper time
-  //       return timer(Math.max(1, expiresAt - now));
-  //     });
-
-  //   // Once the delay time from above is
-  //   // reached, get a new JWT and schedule
-  //   // additional refreshes
-  //   this.refreshSubscription = source.subscribe(() => {
-  //     this.renewTokens();
-  //     this.scheduleRenewal();
-  //   });
-  // }
-
-  // public unscheduleRenewal() {
-  //   if (!this.refreshSubscription) { return; }
-  //   this.refreshSubscription.unsubscribe();
-  // }
 }
 
