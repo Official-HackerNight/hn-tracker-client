@@ -5,8 +5,6 @@ import { AppRoutingModule } from './shared/app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './routes/dashboard/dashboard.component';
 import { NavComponent } from './shared/nav/nav.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
 import { NgMaterialModule } from './shared/ng-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from './shared/auth/auth.service';
@@ -18,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CallbackComponent } from './shared/callback/callback.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { ProfileComponent } from './routes/profile/profile.component';
+import { PrimeNgModule } from './shared/prime-ng.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,15 +31,10 @@ import { ProfileComponent } from './routes/profile/profile.component';
     HttpClientModule,
     AppRoutingModule,
     ExpenseModule,
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
     BrowserAnimationsModule,
     NgMaterialModule,
-    LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG})
+    PrimeNgModule,
+    LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG })
   ],
   providers: [
     ScopeGuardService,

@@ -4,11 +4,13 @@ import { DashboardComponent } from '../routes/dashboard/dashboard.component';
 import { ExpenseComponent } from '../routes/expense/expense.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { CallbackComponent } from './callback/callback.component';
+import { ProfileComponent } from '../routes/profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent},
   { path: 'dashboard', component: DashboardComponent},
   { path: 'callback', component: CallbackComponent},
+  { path: 'profile', component: ProfileComponent},
   {
     path: 'expense',
     component: ExpenseComponent,

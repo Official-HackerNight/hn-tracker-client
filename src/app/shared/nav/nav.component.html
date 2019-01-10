@@ -8,6 +8,7 @@
       <a mat-list-item routerLink="/dashboard">Dashboard</a>
       <span *ngIf="auth.userHasScopes(['write:messages'])">
         <a mat-list-item routerLink="/expense" >Expenses</a>
+        <a mat-list-item routerLink="/profile" >Profile</a>
         <a mat-list-item href="#">Link 2</a>
       </span>
 
