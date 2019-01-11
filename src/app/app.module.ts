@@ -17,6 +17,8 @@ import { CallbackComponent } from './shared/callback/callback.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { PrimeNgModule } from './shared/prime-ng.module';
+import { HnClickerLibModule } from 'hn-clicker-lib';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +36,7 @@ import { PrimeNgModule } from './shared/prime-ng.module';
     BrowserAnimationsModule,
     NgMaterialModule,
     PrimeNgModule,
+    HnClickerLibModule,
     LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG })
   ],
   providers: [
