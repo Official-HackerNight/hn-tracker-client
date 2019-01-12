@@ -17,6 +17,7 @@ import { CallbackComponent } from './shared/callback/callback.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { PrimeNgModule } from './shared/prime-ng.module';
+import { CalendarModule } from './routes/calendar/calendar.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { PrimeNgModule } from './shared/prime-ng.module';
     BrowserAnimationsModule,
     NgMaterialModule,
     PrimeNgModule,
-    LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG })
+    CalendarModule,
+    LoggerModule.forRoot({ level: NgxLoggerLevel.OFF })
   ],
   providers: [
     ScopeGuardService,
