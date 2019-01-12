@@ -10,13 +10,7 @@ import { AuthService } from '../../shared/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  user: User = {
-    hnUserUsername: '',
-    hnUserPassword: ''
-  };
-
   constructor(public auth: AuthService) {
-    auth.handleAuthentication();
   }
 
   ngOnInit() {
@@ -24,5 +18,16 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     console.log('logging in');
+  }
+
+/*
+  Explicitly linked methods below to allow VSCode Find All References
+  -Steven Kelsey 1/12/2019
+*/
+  logout() {
+    this.auth.logout();
+  }
+  login() {
+    this.auth.login();
   }
 }

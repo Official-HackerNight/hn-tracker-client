@@ -4,6 +4,10 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="!(isHandset$ | async)">
     <mat-toolbar color="primary" >Menu</mat-toolbar>
+    <mat-card *ngIf="auth.isAuthenticated()">
+      <mat-card-title id="avatar-name">{{auth.userProfile?.nickname | titlecase}}</mat-card-title>
+      <img mat-card-avatar class="avatar" src="{{auth.userProfile?.picture}}"  alt="avatar" />
+    </mat-card>
     <mat-nav-list>
       <a mat-list-item routerLink="/dashboard">Dashboard</a>
       <span *ngIf="auth.userHasScopes(['write:messages'])">
@@ -30,7 +34,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>TempAngular7</span>
+      <span>Tracking System</span>
       <span class="spacer"></span>
       <app-login></app-login>
     </mat-toolbar>

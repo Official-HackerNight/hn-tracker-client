@@ -7,13 +7,12 @@ import { AuthService } from './shared/auth/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'TempAngular7';
+  title = 'Tracks';
 
   constructor(public auth: AuthService) {
     // Comment out this method call if using
     // hash-based routing
     auth.handleAuthentication();
-
     // Uncomment this method call if using
     // hash-based routing
     // auth.handleAuthenticationWithHash();

@@ -36,7 +36,7 @@ import { CalendarModule } from './routes/calendar/calendar.module';
     NgMaterialModule,
     PrimeNgModule,
     CalendarModule,
-    LoggerModule.forRoot({ level: NgxLoggerLevel.OFF })
+    LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG })
   ],
   providers: [
     ScopeGuardService,

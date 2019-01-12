@@ -1,0 +1,13 @@
+.nav-card {
+    color: white;
+    border-left: 1px solid white;
+    /* border-right: 1px solid white; */
+    background-color:#3f51b5;
+    padding: 20px;
+    font-weight: bolder;
+}
+
+.nav-card:hover {
+    cursor: pointer;
+    background-color: rgba(128, 128, 128, 0.25);
+}

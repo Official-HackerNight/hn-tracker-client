@@ -1,7 +1,11 @@
 <h4 *ngIf="auth.isAuthenticated()">
-    Welcome "Temp Steve,"
-    <a (click)="auth.logout()">Logout</a>
+    <a (click)="logout()" class="nav-card">Logout
+      <i class="pi pi-sign-out" style="font-size: 1.3em"></i>
+    </a>
+    
 </h4>
-<h4 *ngIf="!auth.isAuthenticated()">
-  <a (click)="auth.login()">Login</a>
+<h4  *ngIf="!auth.isAuthenticated()">
+  <a (click)="login()" class="nav-card">Login
+      <i class="pi pi-sign-in" style="font-size: 1.3em"></i>
+  </a>
 </h4>

@@ -1,7 +1,7 @@
-<img mat-card-image class="avatar" src="{{profile?.picture}}" alt="avatar" />
-{{profile | json}}
+<p-panel header="Title">
+<img mat-card-image class="avatar" src="{{auth.userProfile?.picture}}" alt="avatar" />
+{{auth.userProfile | json}}
 
 <button pButton class="ui-button-info" type="button">Click</button>
-<p-panel header="Title">
   Content
 </p-panel>
