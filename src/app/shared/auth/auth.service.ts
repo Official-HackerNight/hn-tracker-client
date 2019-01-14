@@ -20,7 +20,7 @@ export class AuthService {
 
   public userProfile: any;
   refreshSubscription: any;
-  requestedScopes = 'openid profile read:messages write:messages';
+  requestedScopes = 'openid email profile read:messages write:messages';
 
   auth0 = new auth0.WebAuth({
     clientID: AUTH_CONFIG.clientID,
@@ -98,6 +98,7 @@ export class AuthService {
     const self = this;
     this.auth0.client.userInfo(this._accessToken, (err, profile) => {
       if (profile) {
+        this.logger.info(profile);
         self.userProfile = profile;
       }
     });
@@ -112,7 +113,8 @@ export class AuthService {
    * @param authResult desc
    */
   private localLogin(authResult): void {
-    this.logger.info('auth.localLogin() ');
+    this.logger.info('auth.localLogin(authResult) ');
+    this.logger.info( authResult);
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
     // Set the time that the access token will expire at

@@ -1,7 +1,40 @@
-<p-panel header="Title">
-<img mat-card-image class="avatar" src="{{auth.userProfile?.picture}}" alt="avatar" />
-{{auth.userProfile | json}}
-
-<button pButton class="ui-button-info" type="button">Click</button>
-  Content
-</p-panel>
+<div class="container">
+  <div class="box a">
+    <p-panel header="Profile">
+      <!-- <p-header></p-header> -->
+      Nickname: {{auth.userProfile?.nickname}}
+      <br>
+      Name: {{auth.userProfile?.name}}
+      <br>
+      Email: {{auth.userProfile?.email}}
+      <br>
+      Amount of Expense: N/A
+      <br>
+      Country: TBD - take from browser location?
+      <br>
+      Employed, Student?
+      <br>
+      Address, city, state, zip
+      {{auth.userProfile | json}}      
+    </p-panel>
+  </div>
+  <div class="box b bb">
+      <section>
+          <div class="container">
+            <div class="background-img">
+              <div class="animated-border">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <div class="content">
+                  <img class="avatar" src="{{auth.userProfile?.picture}}" alt="avatar" />
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </section>
+   
+  </div>
+</div>
