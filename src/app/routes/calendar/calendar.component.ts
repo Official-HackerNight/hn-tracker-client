@@ -14,8 +14,19 @@ export class CalendarComponent implements OnInit {
   ngOnInit() {
     this.events = [
       {
-          "title": "All Day Event",
-          "start": "2019-01-11"
+          "expenseId": 3,
+          "title": "Mortgage",
+          "amount": 55,
+          "start": "2019-01-11",
+          "endDate": "",
+          "isRecurring": false,
+          "isActive": true,
+          "separationCount": 0,
+          "maxNumOfOccurences": 1,
+          "dayOfWeek": 0,
+          "weekOfMonth": 0,
+          "dayOfMonth": 0,
+          "monthOfYear": 0
       },
       {
           "title": "Long Event",

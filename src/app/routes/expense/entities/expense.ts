@@ -1,12 +1,13 @@
 
 export interface Expense {
     expenseId: number;
+    expenseName: string;
+    userId: string;
     amount: number;
     description: string;
-    date: string;
-    userId: string;
-    expenseType: {};
-    active: boolean;
-    occurs: number;
-
+    startDate: string;
+    endDate: string;
+    isRecurring: boolean;
+    tags: [];
+    isActive: boolean;
 }

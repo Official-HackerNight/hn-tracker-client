@@ -1,0 +1,17 @@
+{
+  "name": "local-dev-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "expense-dev.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^0.14.2"
+  },
+  "dependencies": {
+    "nocache": "^2.0.0"
+  }
+}

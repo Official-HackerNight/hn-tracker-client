@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Expense } from '../entities/expense';
 import { FormsModule } from '@angular/forms';
-import { ExpenseApiService } from '../expense-services/expense-api.service';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+import { ExpenseApiService } from '../services/expense-services/expense-api.service';
 
 @Component({
   selector: 'app-new-expense',
@@ -13,16 +13,15 @@ export class NewExpenseComponent implements OnInit {
 
   newExpense: Expense = {
     expenseId: 0,
+    expenseName: '',
     amount: 0,
     userId: '',
     description: '',
-    date: null,
-    expenseType: {
-      'expenseTypeId': 1,
-      'type': 'single'
-    },
-    active: true,
-    occurs: 0
+    startDate: null,
+    endDate: null,
+    isRecurring: false,
+    isActive: true,
+    tags: null
   };
 
   constructor(private authService: AuthService, private expenseApiService: ExpenseApiService) { }
