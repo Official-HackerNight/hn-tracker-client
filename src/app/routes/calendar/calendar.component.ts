@@ -1,63 +1,72 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog} from '@angular/material';
+import { CalendarService } from './services/calendar.service';
+import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
+    test;
+    events: any[];
+    options: any;
+    dateToday = Date.now();
 
-  events: any[];
-  options: any;
-  constructor() { }
+    config = {
+        disableClose: false,
+        panelClass: 'new-expense-modal',
+        hasBackdrop: true,
+        backdropClass: '',
+        width: '500px',
+        height: '',
+        minWidth: '',
+        minHeight: '',
+        maxWidth: '100%',
+        maxHeight: '',
+        position: {
+          top: '',
+          bottom: '',
+          left: '',
+          right: ''
+        },
+        data: {
+          message: 'Jazzy jazz jazz'
+        }
+      };
 
-  ngOnInit() {
-    this.events = [
-      {
-          "expenseId": 3,
-          "title": "Mortgage",
-          "amount": 55,
-          "start": "2019-01-11",
-          "endDate": "",
-          "isRecurring": false,
-          "isActive": true,
-          "separationCount": 0,
-          "maxNumOfOccurences": 1,
-          "dayOfWeek": 0,
-          "weekOfMonth": 0,
-          "dayOfMonth": 0,
-          "monthOfYear": 0
-      },
-      {
-          "title": "Long Event",
-          "start": "2019-01-12",
-          "end": "2019-01-011"
-      },
-      {
-          "title": "Repeating Event",
-          "start": "2019-01-09T16:00:00",
-          "editable": false
-      },
-      {
-          "title": "Repeating Event",
-          "start": "2019-01-16T16:00:00",
-          "editable": true
-      },
-      {
-          "title": "Conference",
-          "start": "2019-01-11",
-          "end": "2019-01-13",
-          "editable": false
-      }
-    ];
+    constructor(private calendarService: CalendarService,
+        public dialog: MatDialog) { }
 
-    this.options = {
-      defaultDate: '2019-01-01',
-      header: {
-          right: 'today,prev,next',
-          center: 'title',
-          left: 'month,agendaWeek,agendaDay'
-      },
-    };
-  }
+    ngOnInit() {
+        this.calendarService.fetchCalendarEvents()
+            .subscribe(data => {
+                console.log(data);
+                this.events = this.calendarService.formatCalendarEvents(data);
+            });
+
+        this.options = {
+            defaultDate: this.dateToday,
+            header: {
+                right: 'today,prev,next',
+                center: 'title',
+                left: 'month,agendaWeek,agendaDay'
+            },
+        };
+    }
+
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(CalendarNewExpenseComponent, this.config);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            this.test = result;
+        });
+    }
+
 }
+
+
+

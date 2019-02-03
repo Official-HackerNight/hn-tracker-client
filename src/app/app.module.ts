@@ -18,6 +18,7 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { PrimeNgModule } from './shared/prime-ng.module';
 import { CalendarModule } from './routes/calendar/calendar.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { CalendarModule } from './routes/calendar/calendar.module';
     ProfileComponent
   ],
   imports: [
+    FlexLayoutModule,
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,

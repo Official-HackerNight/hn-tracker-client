@@ -1,6 +1,10 @@
-<p>
-  calendar works!
-</p>
+<section>
+      <button mat-raised-button (click)="openDialog()">New Expense</button>
+    <li *ngIf="test">
+      You chose: <i>{{test}}</i>
+    </li>
+</section>
+
 <div id="calendar">
   <p-fullCalendar  [events]="events" [options]="options"></p-fullCalendar>
 </div>

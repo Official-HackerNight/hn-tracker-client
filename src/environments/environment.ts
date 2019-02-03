@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   context: `http://localhost:4201`,
-  expenseApiUrl: `http://localhost:3000/api/v1/expense/`
+  expenseApiUrl: `http://localhost:3000/api/v1/`
 };
 
 /*

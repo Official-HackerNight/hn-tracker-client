@@ -1,7 +1,7 @@
 
 export interface ExpenseEvent {
     expenseId: number;
-    expenseName: string;
+    title: string;
     amount: number;
     startDate: string;
     endDate: string;
@@ -14,4 +14,8 @@ export interface ExpenseEvent {
     weekOfMonth: number;
     dayOfMonth: number;
     monthOfYear: number;
+
+    // full calendar api requirements
+    allDay?: boolean;
+    editable?: boolean;
 }

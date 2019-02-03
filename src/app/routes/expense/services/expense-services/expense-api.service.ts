@@ -27,7 +27,7 @@ export class ExpenseApiService {
   fetchExpensesPromise(id: string): void {
     // if (this.auth.userProfile) {
       // console.log(`fetchExpenses using profile.sub:   ${this.profile.sub}`);
-      this.httpClient.get(environment.expenseApiUrl + `${id}`).toPromise().then(
+      this.httpClient.get(environment.expenseApiUrl + `expense/${id}`).toPromise().then(
         data => console.log(data));
     // } else {
       // console.log(`not ready yet..`);
@@ -40,7 +40,7 @@ export class ExpenseApiService {
    * @param id: string
    */
   fetchExpenses(id: string): void {
-     this.httpClient.get<Expense>(environment.expenseApiUrl + `${id}`)
+     this.httpClient.get<Expense>(environment.expenseApiUrl + `expense/${id}`)
         .subscribe(resp => {
           console.log(resp);
           this.expenseSubject.next(resp);
@@ -48,12 +48,12 @@ export class ExpenseApiService {
   }
 
   fetchExpensesThisYear(id: string): Observable<number> {
-    return this.httpClient.get<number>(environment.expenseApiUrl + `${id}/year`);
+    return this.httpClient.get<number>(environment.expenseApiUrl + `expense/${id}/year`);
   }
 
   // PERSIST
   persistExpense(expense: Expense) {
-    this.httpClient.post(environment.expenseApiUrl + `expense`, expense)
+    this.httpClient.post(environment.expenseApiUrl + `expense/`, expense)
       .toPromise().then(() => console.log('Expense created'));
   }
 

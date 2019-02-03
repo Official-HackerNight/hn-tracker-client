@@ -6,11 +6,12 @@
     "comments": [
       { "id": 1, "body": "some comment", "postId": 1 }
     ],
-    "events": {
+    "calendar": [ 
+      {
         "expenseId": 3,
         "title": "Mortgage",
-        "amount": 55,
-        "start": "2019-01-11",
+        "amount": 1455,
+        "start": "2019-02-3",
         "endDate": "",
         "isRecurring": false,
         "isActive": true,
@@ -20,5 +21,53 @@
         "weekOfMonth": 0,
         "dayOfMonth": 0,
         "monthOfYear": 0
+    },
+    {
+      "expenseId": 4,
+      "title": "Water",
+      "amount": 55,
+      "start": "2019-02-11",
+      "endDate": "",
+      "isRecurring": false,
+      "isActive": true,
+      "separationCount": 0,
+      "maxNumOfOccurences": 1,
+      "dayOfWeek": 0,
+      "weekOfMonth": 0,
+      "dayOfMonth": 0,
+      "monthOfYear": 0
+    },
+    {
+      "expenseId": 5,
+      "title": "Gas",
+      "amount": 200,
+      "start": "2019-02-2",
+      "endDate": "",
+      "isRecurring": false,
+      "isActive": true,
+      "separationCount": 0,
+      "maxNumOfOccurences": 1,
+      "dayOfWeek": 0,
+      "weekOfMonth": 0,
+      "dayOfMonth": 0,
+      "monthOfYear": 0
+    },
+    {
+      "expenseId": 6,
+      "title": "Truck payment",
+      "amount": 500,
+      "start": "2019-02-2",
+      "endDate": "",
+      "isRecurring": true,
+      "isActive": true,
+      "separationCount": 0,
+      "maxNumOfOccurences": 1,
+      "dayOfWeek": 0,
+      "weekOfMonth": 0,
+      "dayOfMonth": 0,
+      "monthOfYear": 0
     }
-  }
+  ]
+}
+
+  
