@@ -1,6 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Expense } from '../../expense/entities/expense';
+import { ExpenseApiService } from '../../expense/services/expense-services/expense-api.service';
 
 @Component({
   selector: 'app-calendar-new-expense',
@@ -9,23 +11,24 @@ import { NgForm } from '@angular/forms';
 })
 export class CalendarNewExpenseComponent implements OnInit {
 
-  reccuringTypes = [ 'NO REPEAT', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
-  constructor( public dialogRef: MatDialogRef<CalendarNewExpenseComponent>,
-    @Inject(MAT_DIALOG_DATA) public data) {
-      data = {
-        title: 'steve'
-      };
-     }
+  newExpense: Expense;
+  reccuringTypes = ['NO REPEAT', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
+
+  constructor(private expenseApi: ExpenseApiService, public dialogRef: MatDialogRef<CalendarNewExpenseComponent>,
+    @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit() {
   }
 
   onSubmit(form: NgForm) {
-    console.log(form);
+    console.log(form.value);
+    this.newExpense = form.value;
+    this.dialogRef.close(this.newExpense);
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    console.log('onNoClick');
+    this.dialogRef.close(this.newExpense);
   }
 
 }

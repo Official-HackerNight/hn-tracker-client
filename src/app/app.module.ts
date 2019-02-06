@@ -19,6 +19,8 @@ import { ProfileComponent } from './routes/profile/profile.component';
 import { PrimeNgModule } from './shared/prime-ng.module';
 import { CalendarModule } from './routes/calendar/calendar.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CalendarModule as CM, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +40,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     NgMaterialModule,
     PrimeNgModule,
     CalendarModule,
+    CM.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     LoggerModule.forRoot({ level: NgxLoggerLevel.DEBUG })
   ],
   providers: [

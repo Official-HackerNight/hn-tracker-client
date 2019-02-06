@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Expense } from '../../entities/expense';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 
 
 @Injectable()
@@ -53,8 +54,11 @@ export class ExpenseApiService {
 
   // PERSIST
   persistExpense(expense: Expense) {
-    this.httpClient.post(environment.expenseApiUrl + `expense/`, expense)
-      .toPromise().then(() => console.log('Expense created'));
+    console.log('adding expense: ');
+    console.log(expense);
+    this.expenseSubject.next(expense);
+    // this.httpClient.post(environment.expenseApiUrl + `expense/`, expense)
+    //   .toPromise().then(() => console.log('Expense created'));
   }
 
 }

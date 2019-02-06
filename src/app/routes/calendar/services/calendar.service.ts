@@ -41,6 +41,9 @@ export class CalendarService {
       e.title = e.title + ': $' + e.amount;
       e.allDay = true;
       e.editable = true;
+      e.start = new Date(e.start);
+      e.end = new Date(e.endDate);
+      e.draggable = true;
     });
     return expenseEvent;
   }

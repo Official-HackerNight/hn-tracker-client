@@ -10,7 +10,7 @@
       <mat-hint>Expense Amount</mat-hint>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="date" ngModel name="startDate" required #startDateInput="ngModel">
+      <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
       <mat-hint>Start Date</mat-hint>
     </mat-form-field>
     <mat-form-field>
@@ -23,7 +23,7 @@
     </mat-form-field>
     <mat-form-field>
         <input matInput type="number" ngModel name="maxNumOfOccurences" required #maxNumOfOccurencesInput="ngModel">
-        <mat-hint>Every {{type}}</mat-hint>
+        <mat-hint>Every {{reccuringType}}</mat-hint>
       </mat-form-field>
     <mat-form-field>
       <input matInput type="date" ngModel name="endDate" required #endDateInput="ngModel">

@@ -1,5 +1,6 @@
+import { CalendarEvent } from 'calendar-utils';
 
-export interface ExpenseEvent {
+export interface ExpenseEvent extends CalendarEvent {
     expenseId: number;
     title: string;
     amount: number;
