@@ -10,15 +10,16 @@
 
 <div class="text-center">
   <button class="btn btn-primary" (click)="refreshView()">
-    Refresh + re-render the current view
+    Refresh + re-render the current view 
   </button>
 </div>
 
 <div [ngSwitch]="view">
   <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" 
     (eventTimesChanged)="eventTimesChanged($event)" [events]="events" [refresh]="refresh" 
-    [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
-    (beforeViewRender)="beforeMonthViewRender($event)">
+    [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" 
+    (beforeViewRender)="updateCalendarEvents($event)">
+    
   </mwl-calendar-month-view>
 
   <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" [refresh]="refresh">

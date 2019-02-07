@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Expense } from '../../expense/entities/expense';
 import { ExpenseApiService } from '../../expense/services/expense-services/expense-api.service';
+import { ExpenseEvent } from '../expense-event';
 
 @Component({
   selector: 'app-calendar-new-expense',
@@ -11,7 +11,7 @@ import { ExpenseApiService } from '../../expense/services/expense-services/expen
 })
 export class CalendarNewExpenseComponent implements OnInit {
 
-  newExpense: Expense;
+  newExpense: ExpenseEvent;
   reccuringTypes = ['NO REPEAT', 'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY'];
 
   constructor(private expenseApi: ExpenseApiService, public dialogRef: MatDialogRef<CalendarNewExpenseComponent>,

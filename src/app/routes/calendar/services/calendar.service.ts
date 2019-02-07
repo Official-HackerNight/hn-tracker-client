@@ -41,10 +41,36 @@ export class CalendarService {
       e.title = e.title + ': $' + e.amount;
       e.allDay = true;
       e.editable = true;
-      e.start = new Date(e.start);
-      e.end = new Date(e.endDate);
+      console.log('Dates: ');
+      console.log('pre: ' + e.start + ' ' + typeof e.start);
+      e.start = this.validDayFormat(e.start);
+      console.log('after: ' + e.start + ' ' + typeof e.start);
+      e.end = this.validDayFormat(e.end);
       e.draggable = true;
     });
     return expenseEvent;
+  }
+
+  validDayFormat(date: string | Date): Date {
+    if ( typeof date === 'string') {
+      // Convert to Array
+      const dateArr = date.split('');
+
+      // Check correct length
+      if ( date.length !== 10 ) {
+        dateArr[9] = dateArr[8];
+        dateArr[8] = '0';
+      }
+
+      // Add additional Day as Angular Calendar Days starts from 0...
+      dateArr[dateArr.length - 1] = (parseInt(dateArr[dateArr.length - 1], 10) + 1).toString();
+
+      // Convert back to Array;
+      date = dateArr.join('');
+    } else if ( !date ) {
+      return null;
+    }
+    console.log(date);
+    return new Date(date);
   }
 }

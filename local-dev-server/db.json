@@ -11,62 +11,49 @@
         "expenseId": 3,
         "title": "Mortgage",
         "amount": 1455,
-        "start": "2019-02-3",
-        "endDate": "",
-        "isRecurring": false,
+        "start": "2019-02-03",
+        "end": "2019-04-11",
         "isActive": true,
-        "separationCount": 0,
-        "maxNumOfOccurences": 1,
-        "dayOfWeek": 0,
-        "weekOfMonth": 0,
-        "dayOfMonth": 0,
-        "monthOfYear": 0
+        "rrule": {
+          "freq": "1",
+          "bymonthday": "5"
+        }
     },
     {
       "expenseId": 4,
-      "title": "Water",
+      "title": "Water - yearly on the 10th of the current month",
       "amount": 55,
-      "start": "2019-02-11",
-      "endDate": "",
-      "isRecurring": false,
+      "start": "2019-02-10",
+      "end": "2021-04-10",
       "isActive": true,
-      "separationCount": 0,
-      "maxNumOfOccurences": 1,
-      "dayOfWeek": 0,
-      "weekOfMonth": 0,
-      "dayOfMonth": 0,
-      "monthOfYear": 0
+      "rrule": {
+        "freq": "0",
+        "bymonthday": "10",
+        "bymonth": "1"
+      }
     },
     {
       "expenseId": 5,
-      "title": "Gas",
+      "title": "Gas - weekly on mondays",
       "amount": 200,
-      "start": "2019-02-2",
-      "endDate": "",
-      "isRecurring": false,
+      "start": "2019-02-02",
+      "end": "2019-04-11",
       "isActive": true,
-      "separationCount": 0,
-      "maxNumOfOccurences": 1,
-      "dayOfWeek": 0,
-      "weekOfMonth": 0,
-      "dayOfMonth": 0,
-      "monthOfYear": 0
+      "rrule": {
+        "freq": "2",
+        "byweekday": ["MO"]
+      }
     },
     {
       "expenseId": 6,
       "title": "Truck payment",
       "amount": 500,
-      "start": "2019-02-2",
-      "endDate": "",
-      "isRecurring": true,
+      "start": "2019-02-02",
+      "end": "",
       "isActive": true,
-      "separationCount": 0,
-      "maxNumOfOccurences": 1,
-      "dayOfWeek": 0,
-      "weekOfMonth": 0,
-      "dayOfMonth": 0,
-      "monthOfYear": 0
-    }
+      "rrule": ""
+    } 
+
   ]
 }
 

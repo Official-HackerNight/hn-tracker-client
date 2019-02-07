@@ -2,9 +2,18 @@ import { Component, OnInit, Inject, ChangeDetectionStrategy, ViewEncapsulation }
 import { MatDialog } from '@angular/material';
 import { CalendarService } from './services/calendar.service';
 import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
-import { CalendarEvent, CalendarMonthViewDay, CalendarEventTimesChangedEvent } from 'angular-calendar';
+import {
+    CalendarEvent, CalendarMonthViewDay,
+    CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent,
+    CalendarWeekViewBeforeRenderEvent, CalendarDayViewBeforeRenderEvent, CalendarView
+} from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { isSameDay, isSameMonth } from 'date-fns';
+import moment from 'moment-timezone';
+import { ViewPeriod } from 'calendar-utils';
+import RRule from 'rrule';
+import { ExpenseEvent } from './expense-event';
+moment.tz.setDefault('Utc');
 
 @Component({
     selector: 'app-calendar',
@@ -14,9 +23,13 @@ import { isSameDay, isSameMonth } from 'date-fns';
 })
 export class CalendarComponent implements OnInit {
 
-    view = 'month';
-    viewDate: Date = new Date();
-    events: CalendarEvent[] = [];
+    test = {
+        feq: RRule.WEEKLY
+    };
+    view = CalendarView.Month;
+    viewDate = moment().toDate();
+    viewPeriod: ViewPeriod;
+    events: ExpenseEvent[] = [];
     refresh: Subject<any> = new Subject();
     newExpense = [];
     dateToday = Date.now();
@@ -50,6 +63,7 @@ export class CalendarComponent implements OnInit {
         public dialog: MatDialog) { }
 
     ngOnInit() {
+        console.log('feq ' + this.test.feq);
         this.calendarService.fetchCalendarEvents()
             .subscribe(data => {
                 console.log(data);
@@ -82,6 +96,10 @@ export class CalendarComponent implements OnInit {
         this.refresh.next();
     }
 
+    /**
+     * Drag and Drop Event - fn will handle adjustments
+     * @param param0: CalendarEventTimesChangedEvent
+     */
     eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent): void {
         event.start = newStart;
         event.end = newEnd;
@@ -90,16 +108,16 @@ export class CalendarComponent implements OnInit {
 
     /**
      * Handles the click event of a day on the calendar
-     * @param param0: CalendarEvent
+     * @param param0: {Date, CalendarEvent}
      */
-    dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    dayClicked({ date, events }: { date: Date; events: any[] }): void {
         if (isSameMonth(date, this.viewDate)) {
             this.viewDate = date;
             if (events.length > 0) {
                 this.activeDayIsOpen = true;
             } else if (isSameDay(this.viewDate, date) && events.length > 0) {
                 this.activeDayIsOpen = !this.activeDayIsOpen;
-            }  else {
+            } else {
                 this.activeDayIsOpen = false;
             }
         }
@@ -115,6 +133,37 @@ export class CalendarComponent implements OnInit {
         //         day.cssClass = this.cssClass;
         //     }
         // });
+    }
+
+
+    updateCalendarEvents(viewRender: CalendarMonthViewBeforeRenderEvent | CalendarWeekViewBeforeRenderEvent
+        | CalendarDayViewBeforeRenderEvent): void {
+        // if (
+        //     !this.viewPeriod ||
+        //     !moment(this.viewPeriod.start).isSame(viewRender.period.start) ||
+        //     !moment(this.viewPeriod.end).isSame(viewRender.period.end)
+        // ) {
+            this.viewPeriod = viewRender.period;
+            // this.calendarEvents = [];
+            console.log('events dir:');
+            console.dir(this.events);
+            // this.events.forEach(event => {
+            //     console.log('events.forEach');
+            //     console.log(event.rrule);
+            //     const rule = new RRule({
+            //         ...event.rrule,
+            //         dtstart: moment(viewRender.period.start).startOf('day').toDate(),
+            //         until: moment(viewRender.period.end).endOf('day').toDate()
+            //     });
+            //     console.dir(rule);
+            //     // rule.all().forEach(date => {
+            //         // this.events.push(event);
+            //         // });
+            //     // console.log(rule.all());
+            // });
+            // console.dir(this.events);
+            // this.cdr.detectChanges();
+        // }
     }
 }
 

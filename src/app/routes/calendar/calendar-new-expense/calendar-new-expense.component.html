@@ -26,7 +26,7 @@
         <mat-hint>Every {{reccuringType}}</mat-hint>
       </mat-form-field>
     <mat-form-field>
-      <input matInput type="date" ngModel name="endDate" required #endDateInput="ngModel">
+      <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
       <mat-hint>End Date</mat-hint>
     </mat-form-field>
     <button type="submit" color="accent" [disabled]="f.invalid" mat-raised-button>Add Expense</button>
@@ -35,15 +35,3 @@
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Close</button>
 </div>
-
-startDate: string;
-endDate: string;
-isRecurring: boolean;
-isActive: boolean;
-recurringType: string;
-separationCount: number;
-maxNumOfOccurences: number;
-dayOfWeek: number;
-weekOfMonth: number;
-dayOfMonth: number;
-monthOfYear: number;
