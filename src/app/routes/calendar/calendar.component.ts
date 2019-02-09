@@ -23,9 +23,7 @@ moment.tz.setDefault('Utc');
 })
 export class CalendarComponent implements OnInit {
 
-    test = {
-        feq: RRule.WEEKLY
-    };
+    initLoadFlag = true;
     view = CalendarView.Month;
     viewDate = moment().toDate();
     viewPeriod: ViewPeriod;
@@ -63,7 +61,7 @@ export class CalendarComponent implements OnInit {
         public dialog: MatDialog) { }
 
     ngOnInit() {
-        console.log('feq ' + this.test.feq);
+        // console.log(moment().toDate());
         this.calendarService.fetchCalendarEvents()
             .subscribe(data => {
                 console.log(data);
@@ -122,48 +120,47 @@ export class CalendarComponent implements OnInit {
             }
         }
     }
+
     /**
-     * Colored the Calendar Squares prior
-     *  to loading events
-     * @param param0: body of calendar
+     * On a User's change of Calendar View e.g. Month January to February
+     *  Adds all the recurring events for the new view
+     * @param viewRender: CalendarMonthViewBeforeRenderEvent | CalendarWeekViewBeforeRenderEvent
+                                | CalendarDayViewBeforeRenderEvent
      */
-    beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-        // body.forEach(day => {
-        //     if (day.date.getDate() % 2 === 1) {
-        //         day.cssClass = this.cssClass;
-        //     }
-        // });
-    }
-
-
     updateCalendarEvents(viewRender: CalendarMonthViewBeforeRenderEvent | CalendarWeekViewBeforeRenderEvent
         | CalendarDayViewBeforeRenderEvent): void {
-        // if (
-        //     !this.viewPeriod ||
-        //     !moment(this.viewPeriod.start).isSame(viewRender.period.start) ||
-        //     !moment(this.viewPeriod.end).isSame(viewRender.period.end)
-        // ) {
+        console.log('updateCalendarEvents()');
+        if (
+            !this.viewPeriod ||
+            !moment(this.viewPeriod.start).isSame(viewRender.period.start) ||
+            !moment(this.viewPeriod.end).isSame(viewRender.period.end) ||
+            this.initLoadFlag
+        ) {
+            console.log('view period');
+            this.initLoadFlag = false;
             this.viewPeriod = viewRender.period;
-            // this.calendarEvents = [];
-            console.log('events dir:');
-            console.dir(this.events);
+            console.log(this.viewPeriod);
+            // let recurringEvents = [];
             // this.events.forEach(event => {
-            //     console.log('events.forEach');
-            //     console.log(event.rrule);
             //     const rule = new RRule({
             //         ...event.rrule,
             //         dtstart: moment(viewRender.period.start).startOf('day').toDate(),
             //         until: moment(viewRender.period.end).endOf('day').toDate()
             //     });
             //     console.dir(rule);
-            //     // rule.all().forEach(date => {
-            //         // this.events.push(event);
-            //         // });
-            //     // console.log(rule.all());
+            //     rule.all().forEach(date => {
+            //         console.log('new:');
+            //         console.log(date);
+            //         event.start = date;
+            //         console.dir(event);
+            //         this.events.push(event);
+            //     });
+            //     console.log(rule.all());
+            //     console.log(rule.toText());
             // });
             // console.dir(this.events);
             // this.cdr.detectChanges();
-        // }
+        }
     }
 }
 
