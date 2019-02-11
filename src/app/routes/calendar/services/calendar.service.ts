@@ -39,21 +39,42 @@ export class CalendarService {
    * @param expenseEvent: ExpenseEvent[]
    */
   processCalendarEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
-    expenseEvent.forEach(e => {
-      // add the Amount to the title aka expenseName
-      e.title = e.title + ': $' + e.amount;
-      e.allDay = true;
-      e.editable = true;
-      console.log('process init start');
-      console.log(e.start);
-      e.start = this.validDayFormat(e.start);
-      console.log('process after start');
-      console.log(e.start);
-      if (e.end) { e.end = this.validDayFormat(e.end); }
-      e.draggable = true;
-      if ( e.rrule ) { e.rrule.wkst = 0; }
-    });
+    // expenseEvent.forEach(e => {
+    //   // add the Amount to the title aka expenseName
+    //   e.title = e.title + ': $' + e.amount;
+    //   e.allDay = true;
+    //   e.editable = true;
+    //   e.draggable = true;
+    //   console.log('process init start');
+    //   console.log(e.start);
+    //   e.start = this.validDayFormat(e.start);
+    //   console.log('process after start');
+    //   console.log(e.start);
+    //   if (e.end) { e.end = this.validDayFormat(e.end); }
+    //   if ( e.rrule ) {
+    //     e.rrule.wkst = 0;
+    //     e.rrule.dtstart = this.validDayFormat(e.rrule.dtstart);
+    //    }
+    // });
     // rruleFormater - take data from DB and Format with RRule
+    // expenseEvent = this.rruleService.rruleFormater(expenseEvent);
+    expenseEvent = expenseEvent.map(e => {
+      return  {
+        ...e,
+        title: e.title + ': $' + e.amount,
+        allDay: true,
+        editable: true,
+        draggable: true,
+        start: this.validDayFormat(e.start),
+        end: e.end && this.validDayFormat(e.end),
+        rrule: e.rrule && {
+          ...e.rrule,
+          wkst: 0,
+          dtstart: this.validDayFormat(e.rrule.dtstart)
+        }
+      };
+    });
+
     expenseEvent = this.rruleService.rruleFormater(expenseEvent);
     console.log('prior rr expenses');
     console.log(expenseEvent);
@@ -87,7 +108,7 @@ export class CalendarService {
         const e = {
           ...event
         };
-        e.start = moment(date).add(1, 'days').toDate();
+        e.start = moment(date).toDate();
         initReccuringEvents.push(e);
       });
     });
