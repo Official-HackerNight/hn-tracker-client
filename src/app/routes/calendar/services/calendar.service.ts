@@ -15,7 +15,7 @@ export class CalendarService {
   calendarEvent$: Observable<ExpenseEvent> = this.calendarEventSubject.asObservable();
   profile: any;
 
-  constructor(private httpClient: HttpClient, private rruleService: RruleService) { }
+  constructor(private httpClient: HttpClient, private rruleService: RruleService) {}
 
   fetchCalendarEventsPromise(id: string) {
     this.httpClient.get(environment.expenseApiUrl + `calendar/${id}`)
@@ -31,33 +31,37 @@ export class CalendarService {
   }
 
   /**
-   * Takes in Expense API Model and formats it NG FullCalendar
-   * Events Object additional fields for Full Calendar API
+   * Takes in Expense API Model and formats it NG Calendar
+   *  Events Object additional fields for NG Calendar API
    *  -allday
    *  -editable
    *  -use Rrule Formater
    * @param expenseEvent: ExpenseEvent[]
    */
-  formatCalendarEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
+  processCalendarEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
     expenseEvent.forEach(e => {
       // add the Amount to the title aka expenseName
       e.title = e.title + ': $' + e.amount;
       e.allDay = true;
       e.editable = true;
+      console.log('process init start');
+      console.log(e.start);
       e.start = this.validDayFormat(e.start);
-      e.end = this.validDayFormat(e.end);
+      console.log('process after start');
+      console.log(e.start);
+      if (e.end) { e.end = this.validDayFormat(e.end); }
       e.draggable = true;
+      if ( e.rrule ) { e.rrule.wkst = 0; }
     });
     // rruleFormater - take data from DB and Format with RRule
     expenseEvent = this.rruleService.rruleFormater(expenseEvent);
+    console.log('prior rr expenses');
+    console.log(expenseEvent);
     // Add Recurring Events 30 prior and future
     expenseEvent = this.addInitReccuringEvents(expenseEvent);
     // Remove Duplicates
-    console.log('dups');
-    console.log(expenseEvent);
     expenseEvent = this.removeDuplicates(expenseEvent);
-    console.log(expenseEvent);
-    console.log('final expenses');
+    console.log('init expenses');
     console.log(expenseEvent);
     return expenseEvent;
   }
@@ -77,36 +81,60 @@ export class CalendarService {
       const rule = new RRule({
         ...event.rrule,
         dtstart: this.calReccuringEventStartDate(event.start, dtStart),
-        until: until
+        until: this.calReccuringEventEndDate(event.end, until)
       });
       rule.all().forEach((date, i) => {
         const e = {
           ...event
         };
-        event.title = event.title;
-        e.start = date;
+        e.start = moment(date).add(1, 'days').toDate();
         initReccuringEvents.push(e);
       });
     });
     return expenseEvent.concat(initReccuringEvents);
   }
 
+  /**
+   * Takes in User's Date - eStart & View Period RR Date - rrStart
+   *  if the eStart is prior to rrStart
+   *  than rrStart is return (since we are only showing 30-60 days of today's View Range)
+   *  if the estart is within the view period (less than rrStart)
+   *    then the eStart is return since it was created within the view period
+   * @param eStart: Date
+   * @param rrStart: Date
+   */
   calReccuringEventStartDate(eStart, rrStart) {
-    // console.log(eStart);
-    // console.log(rrStart);
-    // console.log(moment(eStart));
-    // console.log(moment(rrStart));
-    // console.log(moment(eStart).diff(rrStart, 'days'));
-    // console.log(moment(rrStart).diff(eStart, 'days'));
-    if (moment(eStart).diff(rrStart, 'days') > 0) {
+    console.log('calStart');
+    console.log(moment(eStart).toDate());
+    console.log(moment(rrStart).toDate());
+    console.log(moment(eStart).diff(rrStart, 'days'));
+    if (moment(eStart).diff(rrStart, 'days') > 36) {
       return eStart;
     } else {
       return rrStart;
     }
   }
 
+  /**
+   * Same idea as calReccuringEventStartDate but for end date
+   * @param eEnd: Date
+   * @param rrEnd: Date
+   */
+  calReccuringEventEndDate(eEnd, rrEnd) {
+    if (moment(eEnd).diff(rrEnd, 'days') < -30) {
+      return eEnd;
+    } else {
+      return rrEnd;
+    }
+  }
+
+  /**
+   * Remove duplicate ExpenseEvent from the Array
+   *  also sorts by date but can/should be removed
+   * @param arr: ExpenseEvent[]
+   */
   removeDuplicates(arr: ExpenseEvent[]): ExpenseEvent[] {
-    console.log(typeof arr[0].start);
+    // console.log(typeof arr[0].start);
     const result = arr.filter((thing, index, self) =>
       index === self.findIndex((t) => (
         t.title === thing.title && t.start.getTime() === thing.start.getTime()
@@ -133,24 +161,29 @@ export class CalendarService {
    * @param date: string | Date
    */
   validDayFormat(date: string | Date): Date {
-    if (typeof date === 'string') {
-      // Convert to Array
-      const dateArr = date.split('');
+    
+    // if (typeof date === 'string') {
+    //   // Convert to Array
+    //   const dateArr = date.split('');
 
-      // Check correct length
-      if (date.length !== 10) {
-        dateArr[9] = dateArr[8];
-        dateArr[8] = '0';
-      }
+    //   // Check correct length
+    //   if (date.length !== 10) {
+    //     dateArr[9] = dateArr[8];
+    //     dateArr[8] = '0';
+    //   }
 
-      // Add additional Day as Angular Calendar Days starts from 0...
-      dateArr[dateArr.length - 1] = (parseInt(dateArr[dateArr.length - 1], 10) + 1).toString();
+    //   // Add additional Day as Angular Calendar Days starts from 0...
+    //   dateArr[dateArr.length - 1] = (parseInt(dateArr[dateArr.length - 1], 10) + 1).toString();
 
-      // Convert back to Array;
-      date = dateArr.join('');
-    } else if (!date) {
-      return null;
-    }
-    return new Date(date);
+    //   // Convert back to Array;
+    //   date = dateArr.join('');
+    // } else if (!date) {
+    //   return null;
+    // }
+    console.log('validDate');
+    console.log(date);
+    console.log(moment(new Date(date)).add(1, 'days').toDate());
+    console.log(new Date(date));
+    return moment(new Date(date)).add(1, 'days').toDate();
   }
 }

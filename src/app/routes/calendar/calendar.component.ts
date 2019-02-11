@@ -1,4 +1,5 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { RruleService } from './services/rrule/rrule.service';
+import { Component, OnInit, Inject, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CalendarService } from './services/calendar.service';
 import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
@@ -23,14 +24,14 @@ moment.tz.setDefault('Utc');
 })
 export class CalendarComponent implements OnInit {
 
-    initLoadFlag = true;
     view = CalendarView.Month;
     viewDate = moment().toDate();
     viewPeriod: ViewPeriod;
     events: ExpenseEvent[] = [];
+    ogEvents: ExpenseEvent[] = [];
+    recurringEvents: ExpenseEvent[] = [];
     refresh: Subject<any> = new Subject();
     newExpense = [];
-    dateToday = Date.now();
     activeDayIsOpen = false;
 
     /**
@@ -58,14 +59,15 @@ export class CalendarComponent implements OnInit {
     };
 
     constructor(private calendarService: CalendarService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog, private cdr: ChangeDetectorRef, private rruleService: RruleService) { }
 
     ngOnInit() {
         // console.log(moment().toDate());
         this.calendarService.fetchCalendarEvents()
             .subscribe(data => {
                 console.log(data);
-                this.events = this.calendarService.formatCalendarEvents(data);
+                this.ogEvents = data;
+                this.events = this.calendarService.processCalendarEvents(data);
             });
     }
 
@@ -80,7 +82,7 @@ export class CalendarComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.newExpense.push(result);
-                this.events.push(this.calendarService.formatCalendarEvents(this.newExpense)[0]);
+                this.events.push(this.calendarService.processCalendarEvents(this.newExpense)[0]);
                 this.newExpense = [];
                 this.refreshView();
             }
@@ -133,34 +135,62 @@ export class CalendarComponent implements OnInit {
         if (
             !this.viewPeriod ||
             !moment(this.viewPeriod.start).isSame(viewRender.period.start) ||
-            !moment(this.viewPeriod.end).isSame(viewRender.period.end) ||
-            this.initLoadFlag
+            !moment(this.viewPeriod.end).isSame(viewRender.period.end)
         ) {
             console.log('view period');
-            this.initLoadFlag = false;
             this.viewPeriod = viewRender.period;
-            console.log(this.viewPeriod);
-            // let recurringEvents = [];
-            // this.events.forEach(event => {
-            //     const rule = new RRule({
-            //         ...event.rrule,
-            //         dtstart: moment(viewRender.period.start).startOf('day').toDate(),
-            //         until: moment(viewRender.period.end).endOf('day').toDate()
-            //     });
-            //     console.dir(rule);
-            //     rule.all().forEach(date => {
-            //         console.log('new:');
-            //         console.log(date);
-            //         event.start = date;
-            //         console.dir(event);
-            //         this.events.push(event);
-            //     });
-            //     console.log(rule.all());
-            //     console.log(rule.toText());
-            // });
-            // console.dir(this.events);
-            // this.cdr.detectChanges();
+            console.log(this.viewPeriod.start);
+            console.log(this.viewPeriod.end);
+            this.events = [];
+            console.log('processing ogEvents');
+            console.log(this.ogEvents);
+            this.ogEvents.forEach(event => {
+                if ( event.rrule  && this.dtIsInViewPeriod(event.start, this.viewPeriod.end)) {
+                    // Copy object with new references
+                    const e = { ...event };
+                    e.rrule = { ...e.rrule};
+                    // format bymonthday if there is one
+                    // e.rrule.bymonthday ?  e.rrule.bymonthday = this.rruleService.bymonthdayFormat(e.rrule.bymonthday)
+                    //  : e.rrule.bymonthday = undefined;
+
+                    const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart,
+                        moment(viewRender.period.start).startOf('day').toDate());
+                    // Setup event recurring rule
+                    let rule = null;
+                    try {
+                        rule = new RRule({
+                        ...e.rrule,
+                        dtstart: newDtStart,
+                        until: this.calendarService.calReccuringEventEndDate(e.rrule.until,
+                            moment(viewRender.period.end).endOf('day').toDate())
+                       });
+                       console.log(e.title);
+                       console.log(rule.toText());
+                       console.log(rule.all());
+                       rule.all().forEach(date => {
+                           const e1 = { ...e };
+                           e1.start = moment(date).add(1, 'days').toDate();
+                           this.recurringEvents.push(e1);
+                       });
+                    } catch (e) {
+                        // logs the exception thrown when recurring events are 0
+                        // console.log(e);
+                    }
+                }
+            });
+            this.events.concat(this.ogEvents).concat(this.recurringEvents);
+            this.events = this.calendarService.removeDuplicates(this.recurringEvents);
+            this.recurringEvents = [];
+            console.log('setting events');
+            console.log(this.events);
+            this.cdr.detectChanges();
         }
+        console.log(this.events);
+    }
+    dtIsInViewPeriod(eStart: Date | string, vEnd: Date): boolean {
+        console.log('in view period');
+        console.log(moment(eStart).diff(vEnd, 'days'));
+        return moment(eStart).diff(vEnd, 'days') < -2;
     }
 }
 

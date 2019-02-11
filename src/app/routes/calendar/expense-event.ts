@@ -4,7 +4,6 @@ export interface ExpenseEvent extends CalendarEvent, ExpenseRRule {
     expenseId: number;
     title: string;
     amount: number;
-    startDate: string;
     endDate: string;
     isActive: boolean;
 
@@ -20,7 +19,10 @@ export interface ExpenseRRule {
         bymonth?: number,
         bymonthday?: number,
         byweekday?: any
-
+        wkst?: any,
+        dtstart?: any,
+        until?: any,
+        interval?: number
         // old still need ?
         separationCount?: number;
         maxNumOfOccurences?: number;

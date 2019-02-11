@@ -1,0 +1,41 @@
+{
+      "expenseId": 4,
+      "title": "Water - yearly on the 10th of the current month",
+      "amount": 55,
+      "start": "2019-02-10",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": "0",
+        "interval": "1",
+        "count": "5",
+        "dtstart": "2019-02-10",
+        "until": "2021-04-10",
+        "tzid": "America/New_York"
+      }
+    },
+    {
+      "expenseId": 5,
+      "title": "Gas - weekly on mo wed fri",
+      "amount": 200,
+      "start": "2019-02-11",
+
+      "isActive": true,
+      "rrule": {
+        "freq": 2,
+        "interval": 1,
+        "byweekday": ["MO", "WE", "FR"],
+        "dtstart": "2019-02-11",
+        "until": "2019-02-22",
+        "count": 10
+      }
+    },
+    {
+      "expenseId": 6,
+      "title": "Truck payment",
+      "amount": 500,
+      "start": "2019-02-02",
+      "end": "2019-02-05",
+      "isActive": true,
+      "rrule": ""
+    } 
