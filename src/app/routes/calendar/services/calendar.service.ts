@@ -6,6 +6,7 @@ import { ExpenseEvent } from '../expense-event';
 import { RruleService } from './rrule/rrule.service';
 import moment from 'moment-timezone';
 import RRule from 'rrule';
+import { NGXLogger } from 'ngx-logger';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +16,7 @@ export class CalendarService {
   calendarEvent$: Observable<ExpenseEvent> = this.calendarEventSubject.asObservable();
   profile: any;
 
-  constructor(private httpClient: HttpClient, private rruleService: RruleService) {}
+  constructor(private httpClient: HttpClient, private rruleService: RruleService, private logger: NGXLogger) { }
 
   fetchCalendarEventsPromise(id: string) {
     this.httpClient.get(environment.expenseApiUrl + `calendar/${id}`)
@@ -39,27 +40,36 @@ export class CalendarService {
    * @param expenseEvent: ExpenseEvent[]
    */
   processCalendarEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
-    // expenseEvent.forEach(e => {
-    //   // add the Amount to the title aka expenseName
-    //   e.title = e.title + ': $' + e.amount;
-    //   e.allDay = true;
-    //   e.editable = true;
-    //   e.draggable = true;
-    //   console.log('process init start');
-    //   console.log(e.start);
-    //   e.start = this.validDayFormat(e.start);
-    //   console.log('process after start');
-    //   console.log(e.start);
-    //   if (e.end) { e.end = this.validDayFormat(e.end); }
-    //   if ( e.rrule ) {
-    //     e.rrule.wkst = 0;
-    //     e.rrule.dtstart = this.validDayFormat(e.rrule.dtstart);
-    //    }
-    // });
+    this.logger.trace(`
+    ****************************************
+    * processCalendarEvents()
+    * Takes in Expense API Model and formats it NG Calendar
+    *  Events Object additional fields for NG Calendar API
+    *  -addNgCalFields()
+    *  -rruleFormater()
+    *  -addInitReccuringEvents()
+    *  -removeDuplicates()
+    ***
+    `);
+    // format ExpenseEvents
+    expenseEvent = this.addNgCalFields(expenseEvent);
     // rruleFormater - take data from DB and Format with RRule
-    // expenseEvent = this.rruleService.rruleFormater(expenseEvent);
+    expenseEvent = this.rruleService.rruleFormater(expenseEvent);
+    // Add Recurring Events 30 prior and future
+    // expenseEvent = this.addInitReccuringEvents(expenseEvent);
+    // Remove Duplicates
+    // expenseEvent = this.removeDuplicates(expenseEvent);
+    return expenseEvent;
+  }
+
+  /**
+   *  -allday
+   *  -editable
+   * @param expenseEvent: ExpenseEvent[]
+   */
+  private addNgCalFields(expenseEvent: ExpenseEvent[]) {
     expenseEvent = expenseEvent.map(e => {
-      return  {
+      return {
         ...e,
         title: e.title + ': $' + e.amount,
         allDay: true,
@@ -67,23 +77,8 @@ export class CalendarService {
         draggable: true,
         start: this.validDayFormat(e.start),
         end: e.end && this.validDayFormat(e.end),
-        rrule: e.rrule && {
-          ...e.rrule,
-          wkst: 0,
-          dtstart: this.validDayFormat(e.rrule.dtstart)
-        }
       };
     });
-
-    expenseEvent = this.rruleService.rruleFormater(expenseEvent);
-    console.log('prior rr expenses');
-    console.log(expenseEvent);
-    // Add Recurring Events 30 prior and future
-    expenseEvent = this.addInitReccuringEvents(expenseEvent);
-    // Remove Duplicates
-    expenseEvent = this.removeDuplicates(expenseEvent);
-    console.log('init expenses');
-    console.log(expenseEvent);
     return expenseEvent;
   }
 
@@ -93,27 +88,30 @@ export class CalendarService {
    *  the start date of the Expense
    * @param expenseEvent: ExpenseEvent[]
    */
-  addInitReccuringEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
-    console.log('init rr');
-    const dtStart = moment().subtract(30, 'd').toDate();
-    const until = moment().add(30, 'd').toDate();
-    const initReccuringEvents: ExpenseEvent[] = [];
-    expenseEvent.forEach(event => {
-      const rule = new RRule({
-        ...event.rrule,
-        dtstart: this.calReccuringEventStartDate(event.start, dtStart),
-        until: this.calReccuringEventEndDate(event.end, until)
-      });
-      rule.all().forEach((date, i) => {
-        const e = {
-          ...event
-        };
-        e.start = moment(date).toDate();
-        initReccuringEvents.push(e);
-      });
-    });
-    return expenseEvent.concat(initReccuringEvents);
-  }
+  // addInitReccuringEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
+  //   const dtStart = moment().subtract(30, 'd').toDate();
+  //   const until = moment().add(30, 'd').toDate();
+  //   const initReccuringEvents: ExpenseEvent[] = [];
+
+  //   expenseEvent.forEach(event => {
+  //     console.log(event.title);
+  //     const newDtStart = this.calReccuringEventStartDate(event.start, dtStart, event.rrule.freq);
+  //     const newDtUntil = this.calReccuringEventEndDate(event.end, until);
+  //     const rule = new RRule({
+  //       ...event.rrule,
+  //       dtstart: newDtStart,
+  //       until: newDtUntil
+  //     });
+  //     rule.all().forEach((date, i) => {
+  //       const e = {
+  //         ...event
+  //       };
+  //       e.start = moment(date).toDate();
+  //       initReccuringEvents.push(e);
+  //     });
+  //   });
+  //   return expenseEvent.concat(initReccuringEvents);
+  // }
 
   /**
    * Takes in User's Date - eStart & View Period RR Date - rrStart
@@ -124,12 +122,8 @@ export class CalendarService {
    * @param eStart: Date
    * @param rrStart: Date
    */
-  calReccuringEventStartDate(eStart, rrStart) {
-    console.log('calStart');
-    console.log(moment(eStart).toDate());
-    console.log(moment(rrStart).toDate());
-    console.log(moment(eStart).diff(rrStart, 'days'));
-    if (moment(eStart).diff(rrStart, 'days') > 36) {
+  calReccuringEventStartDate(eStart, rrStart, feq: number) {
+    if ((moment(eStart).diff(rrStart, 'days') > 36) || feq === 0) {
       return eStart;
     } else {
       return rrStart;
@@ -182,7 +176,6 @@ export class CalendarService {
    * @param date: string | Date
    */
   validDayFormat(date: string | Date): Date {
-    
     // if (typeof date === 'string') {
     //   // Convert to Array
     //   const dateArr = date.split('');
@@ -201,10 +194,6 @@ export class CalendarService {
     // } else if (!date) {
     //   return null;
     // }
-    console.log('validDate');
-    console.log(date);
-    console.log(moment(new Date(date)).add(1, 'days').toDate());
-    console.log(new Date(date));
     return moment(new Date(date)).add(1, 'days').toDate();
   }
 }

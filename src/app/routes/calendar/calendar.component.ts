@@ -14,6 +14,7 @@ import moment from 'moment-timezone';
 import { ViewPeriod } from 'calendar-utils';
 import RRule from 'rrule';
 import { ExpenseEvent } from './expense-event';
+import { NGXLogger } from 'ngx-logger';
 moment.tz.setDefault('Utc');
 
 @Component({
@@ -38,7 +39,7 @@ export class CalendarComponent implements OnInit {
      * Configuration Object passed
      *  into New Expense Modal
      */
-    config = {
+    newExpenseModalConfig = {
         disableClose: false,
         panelClass: 'new-expense-modal',
         hasBackdrop: true,
@@ -58,16 +59,34 @@ export class CalendarComponent implements OnInit {
         data: {}
     };
 
-    constructor(private calendarService: CalendarService,
+    constructor(private calendarService: CalendarService, private logger: NGXLogger,
         public dialog: MatDialog, private cdr: ChangeDetectorRef, private rruleService: RruleService) { }
 
+    /**
+     * Pulls User's ExpenseEvents
+     *  sets:
+     *      -ogEvents[]
+     *      -events
+     */
     ngOnInit() {
-        // console.log(moment().toDate());
+        this.logger.trace('ngOnInit()');
         this.calendarService.fetchCalendarEvents()
             .subscribe(data => {
-                console.log(data);
-                this.ogEvents = data;
-                this.events = this.calendarService.processCalendarEvents(data);
+                // Set Original DB Events to new object reference
+                this.ogEvents = [...this.calendarService.processCalendarEvents(data)];
+
+                // initial Calendar View Period
+                const viewRender: CalendarMonthViewBeforeRenderEvent = {
+                    header: [],
+                    body: [],
+                    period: this.viewPeriod
+                };
+
+                this.updateCalendarEvents(viewRender, true);
+                this.logger.info(`Original DB Events Formatted`);
+                console.log(this.ogEvents);
+                this.logger.info('Processed Events');
+                console.log(this.events);
             });
     }
 
@@ -77,7 +96,7 @@ export class CalendarComponent implements OnInit {
      *  to the events[]
      */
     openDialog(): void {
-        const dialogRef = this.dialog.open(CalendarNewExpenseComponent, this.config);
+        const dialogRef = this.dialog.open(CalendarNewExpenseComponent, this.newExpenseModalConfig);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
@@ -130,66 +149,75 @@ export class CalendarComponent implements OnInit {
                                 | CalendarDayViewBeforeRenderEvent
      */
     updateCalendarEvents(viewRender: CalendarMonthViewBeforeRenderEvent | CalendarWeekViewBeforeRenderEvent
-        | CalendarDayViewBeforeRenderEvent): void {
-        console.log('updateCalendarEvents()');
+        | CalendarDayViewBeforeRenderEvent, force: boolean): void {
+        this.logger.trace('updateCalendarEvents()');
         if (
+            force ||
             !this.viewPeriod ||
             !moment(this.viewPeriod.start).isSame(viewRender.period.start) ||
             !moment(this.viewPeriod.end).isSame(viewRender.period.end)
         ) {
-            console.log('view period');
+            // init
             this.viewPeriod = viewRender.period;
-            console.log(this.viewPeriod.start);
-            console.log(this.viewPeriod.end);
             this.events = [];
-            console.log('processing ogEvents');
-            console.log(this.ogEvents);
-            this.ogEvents.forEach(event => {
-                if ( event.rrule  && this.dtIsInViewPeriod(event.start, this.viewPeriod.end)) {
-                    // Copy object with new references
-                    const e = { ...event };
-                    e.rrule = { ...e.rrule};
-                    // format bymonthday if there is one
-                    // e.rrule.bymonthday ?  e.rrule.bymonthday = this.rruleService.bymonthdayFormat(e.rrule.bymonthday)
-                    //  : e.rrule.bymonthday = undefined;
 
-                    const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart,
-                        moment(viewRender.period.start).startOf('day').toDate());
-                    // Setup event recurring rule
-                    let rule = null;
-                    try {
-                        rule = new RRule({
-                        ...e.rrule,
-                        dtstart: newDtStart,
-                        until: this.calendarService.calReccuringEventEndDate(e.rrule.until,
-                            moment(viewRender.period.end).endOf('day').toDate())
-                       });
-                       console.log(e.title);
-                       console.log(rule.toText());
-                       console.log(rule.all());
-                       rule.all().forEach(date => {
-                           const e1 = { ...e };
-                           e1.start = moment(date).add(1, 'days').toDate();
-                           this.recurringEvents.push(e1);
-                       });
-                    } catch (e) {
-                        // logs the exception thrown when recurring events are 0
-                        // console.log(e);
-                    }
-                }
-            });
+            // calculations
+            this.getRecurringEvents(viewRender);
+
+            // set properties
             this.events.concat(this.ogEvents).concat(this.recurringEvents);
             this.events = this.calendarService.removeDuplicates(this.recurringEvents);
             this.recurringEvents = [];
-            console.log('setting events');
-            console.log(this.events);
             this.cdr.detectChanges();
         }
-        console.log(this.events);
     }
+
+    getRecurringEvents(viewRender: CalendarMonthViewBeforeRenderEvent
+        | CalendarWeekViewBeforeRenderEvent | CalendarDayViewBeforeRenderEvent) {
+
+        this.ogEvents.forEach(event => {
+            if (event.rrule && this.dtIsInViewPeriod(event.start, this.viewPeriod.end)) {
+                // Copy object with new references
+                const e = { ...event };
+                e.rrule = { ...e.rrule };
+
+                // Setup event recurring rule
+                const recurringDates = this.getRecurringDates(e, viewRender.period.start, viewRender.period.end);
+                recurringDates.forEach(date => {
+                    const e1: ExpenseEvent = { ...e };
+                    e1.start = moment(date).toDate();
+                    this.recurringEvents.push(e1);
+                });
+            }
+        });
+    }
+
+    /** */
+    getRecurringDates(e: ExpenseEvent, viewStart: Date, viewEnd: Date): any[] {
+        const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart,
+            moment(viewStart).startOf('day').toDate(), e.rrule.freq);
+        const newDtUntil = this.calendarService.calReccuringEventEndDate(e.rrule.until,
+            moment(viewEnd).endOf('day').toDate());
+        let rule = null;
+        try {
+            rule = new RRule({
+                ...e.rrule,
+                dtstart: new Date(newDtStart),
+                until: new Date(newDtUntil)
+            });
+            return rule.all();
+        } catch (e) {
+            // logs the exception thrown when recurring events are 0
+            console.log(e);
+        }
+    }
+
+    /**
+     *
+     * @param eStart: Date | String
+     * @param vEnd: Date
+     */
     dtIsInViewPeriod(eStart: Date | string, vEnd: Date): boolean {
-        console.log('in view period');
-        console.log(moment(eStart).diff(vEnd, 'days'));
         return moment(eStart).diff(vEnd, 'days') < -2;
     }
 }

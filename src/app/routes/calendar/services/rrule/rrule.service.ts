@@ -1,35 +1,77 @@
 import { Injectable } from '@angular/core';
 import { ExpenseEvent } from '../../expense-event';
 import RRule from 'rrule';
+import { NGXLogger } from 'ngx-logger';
+import moment from 'moment-timezone';
 @Injectable({
   providedIn: 'root'
 })
 export class RruleService {
 
-  constructor() { }
+  constructor(private logger: NGXLogger) { }
 
   /**
    * Controller Method of Sub Formating methods
-   *  -feq
-   *  -byweekday
+   *  -feq:
+   *        0 to RRule.YEAR
+   *        1 to RRule.MONTH
+   *        2 to RRule.WEEKLY etc.
+   *  -byweekday:
+   *    offset: SU -> RRule.MO
+   *            MO -> RRule.TU etc.
    * @param events: ExpenseEvent[]
    */
   rruleFormater(events: ExpenseEvent[]): ExpenseEvent[] {
-    events.forEach(e => {
-      if (e.rrule) {
-        e.rrule.freq = this.feqFormat(e.rrule.freq);
-        e.rrule.byweekday ?  e.rrule.byweekday = this.byweekdayFormat(e.rrule.byweekday) : e.rrule.byweekday = undefined;
-        // e.rrule.bymonthday ?  e.rrule.bymonthday = this.bymonthdayFormat(e.rrule.bymonthday) : e.rrule.bymonthday = undefined;
-      }
+    this.logger.trace(`
+    ****************************************
+    * rruleFormater()
+    * Controller Method of Sub Formating methods
+    * -dtStart & until
+    *       addOneDay()
+    *  -feq:
+    *        0 to RRule.YEAR
+    *        1 to RRule.MONTH
+    *        2 to RRule.WEEKLY etc.
+    *  -byweekday:
+    *    offset: SU -> RRule.MO
+    *            MO -> RRule.TU etc.
+    *
+    * -bymonthday:
+    *   offset:  1 -> 2
+    *           10 -> 11
+    *           31 -> 32
+    * ******************************
+    `);
+    events = events.map(ev => {
+      return {
+        ...ev,
+        rrule: ev.rrule && {
+          ...ev.rrule,
+          freq: this.feqFormat(ev.rrule.freq),
+          byweekday: ev.rrule.byweekday && this.byweekdayFormat(ev.rrule.byweekday),
+          bymonthday: ev.rrule.bymonthday && this.bymonthdayFormat(ev.rrule.bymonthday),
+          wkst: RRule.SU,
+          dtstart: this.addOneDay(ev.rrule.dtstart),
+          until: this.addOneDay(ev.rrule.until)
+        }
+      };
     });
     return events;
   }
 
-  feqFormat(frequency) {
-    switch ( frequency ) {
-      case(0 || '0'): return RRule.YEARLY;
-      case(1 || '1'): return RRule.MONTHLY;
-      case(2 || '2'): return RRule.WEEKLY;
+
+  addOneDay(date: Date | string) {
+    return moment(new Date(date)).add(1, 'days').toDate();
+  }
+
+  feqFormat(frequency: number | string) {
+    if (typeof frequency === 'string') {
+      frequency = parseInt(frequency, 10);
+    }
+    switch (frequency) {
+      case (0): return RRule.YEARLY;
+      case (1): return RRule.MONTHLY;
+      case (2): return RRule.WEEKLY;
     }
   }
 
@@ -41,7 +83,7 @@ export class RruleService {
    *  e.g. SU -> RRule.SA ( Sunday to Saturday)
    */
   byweekdayFormat(bwd: any[]) {
-    bwd.forEach( (e, i) => {
+    bwd.forEach((e, i) => {
       if (e === 'SU') { bwd[i] = RRule.MO; }
       if (e === 'MO') { bwd[i] = RRule.TU; }
       if (e === 'TU') { bwd[i] = RRule.WE; }
