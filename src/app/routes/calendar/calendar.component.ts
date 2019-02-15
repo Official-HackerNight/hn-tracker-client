@@ -165,8 +165,9 @@ export class CalendarComponent implements OnInit {
             this.getRecurringEvents(viewRender);
 
             // set properties
-            this.events.concat(this.ogEvents).concat(this.recurringEvents);
-            this.events = this.calendarService.removeDuplicates(this.recurringEvents);
+            this.events.push(...this.ogEvents);
+            this.events.push(...this.recurringEvents);
+            this.events = this.calendarService.removeDuplicates(this.events);
             this.recurringEvents = [];
             this.cdr.detectChanges();
         }
@@ -194,17 +195,24 @@ export class CalendarComponent implements OnInit {
 
     /** */
     getRecurringDates(e: ExpenseEvent, viewStart: Date, viewEnd: Date): any[] {
-        const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart,
-            moment(viewStart).startOf('day').toDate(), e.rrule.freq);
-        const newDtUntil = this.calendarService.calReccuringEventEndDate(e.rrule.until,
-            moment(viewEnd).endOf('day').toDate());
+        console.log('---------------------');
+        console.log(' getRecurringDates()');
+        console.log('estart/end & viewstart/end');
+        console.log(e.rrule.dtstart + ' ' + e.rrule.until);
+        console.log( viewStart + ' ' + viewEnd);
+        const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart, viewStart, e.rrule.freq);
+        const newDtUntil = this.calendarService.calReccuringEventEndDate(e.rrule.until, viewEnd);
+        console.log('selected start date' + newDtStart);
+        console.log('selected until date' + newDtUntil);
         let rule = null;
         try {
             rule = new RRule({
                 ...e.rrule,
-                dtstart: new Date(newDtStart),
-                until: new Date(newDtUntil)
+                dtstart: moment(newDtStart).hour(17).toDate(),
+                until: newDtUntil
             });
+            console.log(rule);
+            console.log(rule.all());
             return rule.all();
         } catch (e) {
             // logs the exception thrown when recurring events are 0

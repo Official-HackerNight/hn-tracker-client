@@ -1,104 +1,112 @@
 {
-    "posts": [
-      { "id": 1, "title": "json-server", "author": "typicode" },
-      { "id": 2, "title": "json-server2", "author": "typicode2" }
-    ],
-    "comments": [
-      { "id": 1, "body": "some comment", "postId": 1 }
-    ],
-    "calendar": [ 
-      {
-        "expenseId": 3,
-        "title": "Mortgage - Monthly on 1st",
-        "amount": 1455,
-        "start": "2018-12-01",
-        "end": "",
-        "isActive": true,
-        "rrule": {
-          "freq": 1,
-          "interval": 1,
-          "count": 5,
-          "dtstart": "2018-12-01",
-          "until": "2020-01-01",
-          "bymonthday": 1
-        }
-      },
-      {
-        "expenseId": 4,
-        "title": "Mortgage1 - Monthly on 31st",
-        "amount": 1455,
-        "start": "2018-12-31",
-        "end": "",
-        "isActive": true,
-        "rrule": {
-          "freq": 1,
-          "interval": 1,
-          "count": 5,
-          "dtstart": "2018-12-31",
-          "until": "2020-01-31",
-          "bymonthday": 31
-        }
-      },
-      {
-        "expenseId": 5,
-        "title": "Mortgage2 - Monthly on 14th",
-        "amount": 1455,
-        "start": "2018-12-14",
-        "end": "",
-        "isActive": true,
-        "rrule": {
-          "freq": 1,
-          "interval": 1,
-          "count": 5,
-          "dtstart": "2018-12-14",
-          "until": "2020-01-14",
-          "bymonthday": 14
-        }
-      },
-      {
-        "expenseId": 6,
-        "title": "Water - yearly on the 10th of the  month",
-        "amount": 55,
-        "start": "2018-02-10",
-        "end": "",
-        "isActive": true,
-        "rrule": {
-          "freq": 0,
-          "interval": 1,
-          "dtstart": "2018-02-10",
-          "until": "2021-04-10"
-        }
-      },
-      {
-        "expenseId": 7,
-        "title": "Water2 - yearly on the 20th of the month",
-        "amount": 22,
-        "start": "2018-04-20",
-        "end": "",
-        "isActive": true,
-        "rrule": {
-          "freq": 0,
-          "interval": 1,
-          "dtstart": "2018-04-20",
-          "until": "2021-04-20"
-        }
-      },
-      {
-        "expenseId": 8,
-        "title": "Gas - weekly on mo wed fri",
-        "amount": 200,
-        "start": "2019-02-11",
-  
-        "isActive": true,
-        "rrule": {
-          "freq": 2,
-          "interval": 1,
-          "byweekday": ["MO", "WE", "FR"],
-          "dtstart": "2019-02-11",
-          "until": "2019-02-22"
-        }
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "id": 2,
+      "title": "json-server2",
+      "author": "typicode2"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "calendar": [
+    {
+      "expenseId": 1,
+      "title": "Gas - weekly on mo wed fri",
+      "amount": 200,
+      "start": "2019-02-11",
+      "isActive": true,
+      "rrule": {
+        "freq": 2,
+        "interval": 1,
+        "byweekday": [
+          "MO",
+          "WE",
+          "FR"
+        ],
+        "dtstart": "2019-02-11",
+        "until": "2019-02-22"
       }
+    },
+    {
+      "expenseId": 2,
+      "title": "Mortgage2 - Monthly on 14th",
+      "amount": 1455,
+      "start": "2018-12-14",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "count": 5,
+        "dtstart": "2018-12-14",
+        "until": "2020-01-14",
+        "bymonthday": 14,
+        "tzid": "Utc"
+      }
+    },
+    {
+      "expenseId": 3,
+      "title": "Mortgage1 - Monthly on 31st",
+      "amount": 1455,
+      "start": "2018-12-31",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "count": 5,
+        "dtstart": "2018-12-31",
+        "until": "2020-01-31",
+        "bymonthday": 31,
+        "tzid": "Utc"
+      }
+    },
+    {
+      "expenseId": 4,
+      "title": "Water - yearly on the 10th of the  month",
+      "amount": 55,
+      "start": "2018-02-10",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 0,
+        "interval": 1,
+        "dtstart": "2018-02-10",
+        "until": "2021-04-10"
+      }
+    },
+    {
+      "expenseId": 5,
+      "title": "Water2 - yearly on the 20th of the month",
+      "amount": 22,
+      "start": "2018-04-20",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 0,
+        "interval": 1,
+        "dtstart": "2018-04-20",
+        "until": "2021-04-20"
+      }
+    },
+    {
+      "expenseId": 6,
+      "title": "Truck payment",
+      "amount": 500,
+      "start": "2019-01-02",
+      "end": "2019-01-05",
+      "isActive": true,
+      "rrule": ""
+    }
   ]
 }
-
-  

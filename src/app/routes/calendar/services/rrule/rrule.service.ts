@@ -3,6 +3,7 @@ import { ExpenseEvent } from '../../expense-event';
 import RRule from 'rrule';
 import { NGXLogger } from 'ngx-logger';
 import moment from 'moment-timezone';
+moment.tz.setDefault('Utc');
 @Injectable({
   providedIn: 'root'
 })
@@ -51,7 +52,7 @@ export class RruleService {
           byweekday: ev.rrule.byweekday && this.byweekdayFormat(ev.rrule.byweekday),
           bymonthday: ev.rrule.bymonthday && this.bymonthdayFormat(ev.rrule.bymonthday),
           wkst: RRule.SU,
-          dtstart: this.addOneDay(ev.rrule.dtstart),
+          dtstart: ev.rrule.dtstart,
           until: this.addOneDay(ev.rrule.until)
         }
       };
@@ -62,6 +63,7 @@ export class RruleService {
 
   addOneDay(date: Date | string) {
     return moment(new Date(date)).add(1, 'days').toDate();
+    // return moment(new Date(date)).toDate();
   }
 
   feqFormat(frequency: number | string) {
@@ -84,13 +86,21 @@ export class RruleService {
    */
   byweekdayFormat(bwd: any[]) {
     bwd.forEach((e, i) => {
-      if (e === 'SU') { bwd[i] = RRule.MO; }
-      if (e === 'MO') { bwd[i] = RRule.TU; }
-      if (e === 'TU') { bwd[i] = RRule.WE; }
-      if (e === 'WE') { bwd[i] = RRule.TH; }
-      if (e === 'TH') { bwd[i] = RRule.FR; }
-      if (e === 'FR') { bwd[i] = RRule.SA; }
-      if (e === 'SA') { bwd[i] = RRule.SU; }
+      // if (e === 'SU') { bwd[i] = RRule.MO; }
+      // if (e === 'MO') { bwd[i] = RRule.TU; }
+      // if (e === 'TU') { bwd[i] = RRule.WE; }
+      // if (e === 'WE') { bwd[i] = RRule.TH; }
+      // if (e === 'TH') { bwd[i] = RRule.FR; }
+      // if (e === 'FR') { bwd[i] = RRule.SA; }
+      // if (e === 'SA') { bwd[i] = RRule.SU; }
+
+      if (e === 'SU') { bwd[i] = RRule.SU; }
+      if (e === 'MO') { bwd[i] = RRule.MO; }
+      if (e === 'TU') { bwd[i] = RRule.TU; }
+      if (e === 'WE') { bwd[i] = RRule.WE; }
+      if (e === 'TH') { bwd[i] = RRule.TH; }
+      if (e === 'FR') { bwd[i] = RRule.FR; }
+      if (e === 'SA') { bwd[i] = RRule.SA; }
     });
     return bwd;
   }
@@ -100,6 +110,6 @@ export class RruleService {
    * @param bmd: number
    */
   bymonthdayFormat(bmd: number): number {
-    return ++bmd;
+    return bmd;
   }
 }

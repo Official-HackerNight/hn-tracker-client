@@ -1,4 +1,18 @@
 <div id="container">
+  <div id="calMonWkD" fxLayout="row" fxLayoutGap="100px" fxLayoutAlign="center center">
+    <div class="hover-grey" (click)="viewChange.emit('month')" [class.active]="view === 'month'">
+      Month
+    </div>
+    <div class="hover-grey" (click)="viewChange.emit('week')" [class.active]="view === 'week'">
+      Week
+    </div>
+    <div class="hover-grey" (click)="viewChange.emit('day')" [class.active]="view === 'day'">
+      Day
+    </div>
+  </div>
+  <div id="calDate" fxLayout="row" fxLayoutAlign="center center">
+    <h1>{{ viewDate | calendarDate: view + 'ViewTitle':locale }}</h1>
+  </div>
   <div id="calPevTdNxt" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
     <div class="hover-grey" fxFlex="20" fxLayoutAlign="end end" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" 
     (viewDateChange)="viewDateChange.next(viewDate)">
@@ -13,18 +27,5 @@
       Next
     </div>
   </div>
-  <div id="calDate" fxLayout="row" fxLayoutAlign="center center">
-        <h1>{{ viewDate | calendarDate: view + 'ViewTitle':locale }}</h1>
-      </div>
-      <div id="calMonWkD" fxLayout="row" fxLayoutGap="100px" fxLayoutAlign="center center">
-        <div class="hover-grey" (click)="viewChange.emit('month')" [class.active]="view === 'month'">
-          Month
-        </div>
-        <div class="hover-grey" (click)="viewChange.emit('week')" [class.active]="view === 'week'">
-          Week
-        </div>
-        <div class="hover-grey" (click)="viewChange.emit('day')" [class.active]="view === 'day'">
-          Day
-        </div>
-      </div>
+ 
 </div>

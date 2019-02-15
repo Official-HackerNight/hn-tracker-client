@@ -7,6 +7,7 @@ import { RruleService } from './rrule/rrule.service';
 import moment from 'moment-timezone';
 import RRule from 'rrule';
 import { NGXLogger } from 'ngx-logger';
+moment.tz.setDefault('Utc');
 @Injectable({
   providedIn: 'root'
 })
@@ -119,27 +120,27 @@ export class CalendarService {
    *  than rrStart is return (since we are only showing 30-60 days of today's View Range)
    *  if the estart is within the view period (less than rrStart)
    *    then the eStart is return since it was created within the view period
-   * @param eStart: Date
-   * @param rrStart: Date
+   * @param eventStart: Date
+   * @param viewStart: Date
    */
-  calReccuringEventStartDate(eStart, rrStart, feq: number) {
-    if ((moment(eStart).diff(rrStart, 'days') > 36) || feq === 0) {
-      return eStart;
+  calReccuringEventStartDate(eventStart, viewStart, feq: number) {
+    if ((moment(eventStart).diff(viewStart, 'days') > 0) || feq === 0) {
+      return eventStart;
     } else {
-      return rrStart;
+      return viewStart;
     }
   }
 
   /**
    * Same idea as calReccuringEventStartDate but for end date
-   * @param eEnd: Date
-   * @param rrEnd: Date
+   * @param eventEnd: Date
+   * @param viewEnd: Date
    */
-  calReccuringEventEndDate(eEnd, rrEnd) {
-    if (moment(eEnd).diff(rrEnd, 'days') < -30) {
-      return eEnd;
+  calReccuringEventEndDate(eventEnd, viewEnd) {
+    if (moment(eventEnd).diff(viewEnd, 'days') < 0) {
+      return eventEnd;
     } else {
-      return rrEnd;
+      return viewEnd;
     }
   }
 
@@ -154,14 +155,6 @@ export class CalendarService {
       index === self.findIndex((t) => (
         t.title === thing.title && t.start.getTime() === thing.start.getTime()
       )));
-    result.sort((a, b) => {
-      const keyA = new Date(a.start),
-        keyB = new Date(b.start);
-      // Compare the 2 dates
-      if (keyA < keyB) { return -1; }
-      if (keyA > keyB) { return 1; }
-      return 0;
-    });
     return result;
   }
 
@@ -176,24 +169,6 @@ export class CalendarService {
    * @param date: string | Date
    */
   validDayFormat(date: string | Date): Date {
-    // if (typeof date === 'string') {
-    //   // Convert to Array
-    //   const dateArr = date.split('');
-
-    //   // Check correct length
-    //   if (date.length !== 10) {
-    //     dateArr[9] = dateArr[8];
-    //     dateArr[8] = '0';
-    //   }
-
-    //   // Add additional Day as Angular Calendar Days starts from 0...
-    //   dateArr[dateArr.length - 1] = (parseInt(dateArr[dateArr.length - 1], 10) + 1).toString();
-
-    //   // Convert back to Array;
-    //   date = dateArr.join('');
-    // } else if (!date) {
-    //   return null;
-    // }
-    return moment(new Date(date)).add(1, 'days').toDate();
+    return moment(date).add(0, 'days').hour(17).toDate();
   }
 }

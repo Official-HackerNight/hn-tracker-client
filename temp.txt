@@ -1,41 +1,89 @@
-{
-      "expenseId": 4,
-      "title": "Water - yearly on the 10th of the current month",
-      "amount": 55,
-      "start": "2019-02-10",
-      "end": "",
-      "isActive": true,
-      "rrule": {
-        "freq": "0",
-        "interval": "1",
-        "count": "5",
-        "dtstart": "2019-02-10",
-        "until": "2021-04-10",
-        "tzid": "America/New_York"
-      }
-    },
-    {
-      "expenseId": 5,
+   {
+      "expenseId": 1,
       "title": "Gas - weekly on mo wed fri",
       "amount": 200,
       "start": "2019-02-11",
-
       "isActive": true,
       "rrule": {
         "freq": 2,
         "interval": 1,
-        "byweekday": ["MO", "WE", "FR"],
+        "byweekday": [
+          "MO",
+          "WE",
+          "FR"
+        ],
         "dtstart": "2019-02-11",
-        "until": "2019-02-22",
-        "count": 10
+        "until": "2019-02-22"
+      }
+    },
+    {
+      "expenseId": 2,
+      "title": "Mortgage2 - Monthly on 14th",
+      "amount": 1455,
+      "start": "2018-12-14",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "count": 5,
+        "dtstart": "2018-12-14",
+        "until": "2020-01-14",
+        "bymonthday": 14,
+        "tzid": "Utc"
+      }
+    },
+    {
+      "expenseId": 3,
+      "title": "Mortgage1 - Monthly on 31st",
+      "amount": 1455,
+      "start": "2018-12-31",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "count": 5,
+        "dtstart": "2018-12-31",
+        "until": "2020-01-31",
+        "bymonthday": 31,
+        "tzid": "Utc"
+      }
+    },
+    {
+      "expenseId": 4,
+      "title": "Water - yearly on the 10th of the  month",
+      "amount": 55,
+      "start": "2018-02-10",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 0,
+        "interval": 1,
+        "dtstart": "2018-02-10",
+        "until": "2021-04-10"
+      }
+    },
+    {
+      "expenseId": 5,
+      "title": "Water2 - yearly on the 20th of the month",
+      "amount": 22,
+      "start": "2018-04-20",
+      "end": "",
+      "isActive": true,
+      "rrule": {
+        "freq": 0,
+        "interval": 1,
+        "dtstart": "2018-04-20",
+        "until": "2021-04-20"
       }
     },
     {
       "expenseId": 6,
       "title": "Truck payment",
       "amount": 500,
-      "start": "2019-02-02",
-      "end": "2019-02-05",
+      "start": "2019-01-02",
+      "end": "2019-01-05",
       "isActive": true,
       "rrule": ""
-    } 
+    }
