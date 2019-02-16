@@ -95,13 +95,14 @@ export class CalendarComponent implements OnInit {
      *  once closed, new expense will be added
      *  to the events[]
      */
-    openDialog(): void {
+    openNewExpenseDialog(): void {
         const dialogRef = this.dialog.open(CalendarNewExpenseComponent, this.newExpenseModalConfig);
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.newExpense.push(result);
                 this.events.push(this.calendarService.processCalendarEvents(this.newExpense)[0]);
+                this.calendarService.persistExpense(this.newExpense[0]);
                 this.newExpense = [];
                 this.refreshView();
             }

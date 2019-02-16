@@ -1,8 +1,5 @@
 <section>
-  <button mat-raised-button (click)="openDialog()">New Expense</button>
-  <li *ngIf="newExpense">
-    You chose: <i>{{newExpense | json}}</i>
-  </li>
+  <button mat-raised-button (click)="openNewExpenseDialog()">New Expense</button>
 </section>
 
 <app-calendar-header [(view)]="view" [(viewDate)]="viewDate">

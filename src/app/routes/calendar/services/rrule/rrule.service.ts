@@ -74,6 +74,7 @@ export class RruleService {
       case (0): return RRule.YEARLY;
       case (1): return RRule.MONTHLY;
       case (2): return RRule.WEEKLY;
+      case (3): return RRule.DAILY;
     }
   }
 

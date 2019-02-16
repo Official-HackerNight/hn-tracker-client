@@ -44,7 +44,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    LoggerModule.forRoot({ level: NgxLoggerLevel.TRACE })
+    LoggerModule.forRoot({ level: NgxLoggerLevel.OFF })
   ],
   providers: [
     ScopeGuardService,

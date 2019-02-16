@@ -1,37 +1,47 @@
 <h1 mat-dialog-title>Create New Expense</h1>
+
 <div mat-dialog-content>
   <form #f="ngForm" (ngSubmit)="onSubmit(f)" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+
     <mat-form-field>
       <input matInput type="text" ngModel name="title" required #titleInput="ngModel">
       <mat-hint>Expense Title</mat-hint>
     </mat-form-field>
+
     <mat-form-field>
       <input matInput type="number" ngModel name="amount" required #amountInput="ngModel">
       <mat-hint>Expense Amount</mat-hint>
     </mat-form-field>
+
     <mat-form-field>
       <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
       <mat-hint>Start Date</mat-hint>
     </mat-form-field>
+    
     <mat-form-field>
-      <mat-select placeholder="Reccuring" ngModel name="reccuringType" #reccuringTypeInput="ngModel">
-        <mat-option *ngFor="let type of reccuringTypes" [value]="type" >
+      <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
+      <mat-hint>End Date</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Reccuring" ngModel name="rrule" #rruleTypeInput="ngModel" [(value)]="selectedRruleType">
+        <mat-option *ngFor="let type of rruleTypes" [value]="type" (onSelectionChange)="recurringSelected($event)">
           {{type}}
         </mat-option>
       </mat-select>
       <mat-hint>Reoccuring Type</mat-hint>
     </mat-form-field>
+  <div *ngIf="selectedRruleType !== 'NO REPEAT'">
     <mat-form-field>
-        <input matInput type="number" ngModel name="maxNumOfOccurences" required #maxNumOfOccurencesInput="ngModel">
-        <mat-hint>Every {{reccuringType}}</mat-hint>
+        <input matInput type="number" ngModel name="maxNumOfOccurences" required #maxNumOfOccurencesInput="ngModel" placeholder="1" min="0">
+        <mat-hint>Every {{maxNumOfOccurencesInput.value || 1}} - {{selectedRruleType}}</mat-hint>
       </mat-form-field>
-    <mat-form-field>
-      <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
-      <mat-hint>End Date</mat-hint>
-    </mat-form-field>
+  </div>
+
     <button type="submit" color="accent" [disabled]="f.invalid" mat-raised-button>Add Expense</button>
   </form>
 </div>
+
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Close</button>
 </div>

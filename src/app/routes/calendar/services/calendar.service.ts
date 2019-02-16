@@ -32,6 +32,14 @@ export class CalendarService {
     return this.httpClient.get(environment.expenseApiUrl + `calendar`);
   }
 
+  persistExpense(expenseEvent: ExpenseEvent) {
+    console.log('adding expense: ');
+    console.log(expenseEvent);
+    // this.expenseSubject.next(expense);
+    this.httpClient.post(environment.expenseApiUrl + `calendar`, expenseEvent)
+      .toPromise().then(() => console.log('Expense created'));
+  }
+
   /**
    * Takes in Expense API Model and formats it NG Calendar
    *  Events Object additional fields for NG Calendar API
@@ -56,10 +64,7 @@ export class CalendarService {
     expenseEvent = this.addNgCalFields(expenseEvent);
     // rruleFormater - take data from DB and Format with RRule
     expenseEvent = this.rruleService.rruleFormater(expenseEvent);
-    // Add Recurring Events 30 prior and future
-    // expenseEvent = this.addInitReccuringEvents(expenseEvent);
-    // Remove Duplicates
-    // expenseEvent = this.removeDuplicates(expenseEvent);
+
     return expenseEvent;
   }
 
@@ -83,36 +88,6 @@ export class CalendarService {
     return expenseEvent;
   }
 
-  /**
-   * Using RRule to calculate the inital Reccuring Expense
-   *  of the last 30 days & future 30 days depending on
-   *  the start date of the Expense
-   * @param expenseEvent: ExpenseEvent[]
-   */
-  // addInitReccuringEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
-  //   const dtStart = moment().subtract(30, 'd').toDate();
-  //   const until = moment().add(30, 'd').toDate();
-  //   const initReccuringEvents: ExpenseEvent[] = [];
-
-  //   expenseEvent.forEach(event => {
-  //     console.log(event.title);
-  //     const newDtStart = this.calReccuringEventStartDate(event.start, dtStart, event.rrule.freq);
-  //     const newDtUntil = this.calReccuringEventEndDate(event.end, until);
-  //     const rule = new RRule({
-  //       ...event.rrule,
-  //       dtstart: newDtStart,
-  //       until: newDtUntil
-  //     });
-  //     rule.all().forEach((date, i) => {
-  //       const e = {
-  //         ...event
-  //       };
-  //       e.start = moment(date).toDate();
-  //       initReccuringEvents.push(e);
-  //     });
-  //   });
-  //   return expenseEvent.concat(initReccuringEvents);
-  // }
 
   /**
    * Takes in User's Date - eStart & View Period RR Date - rrStart
