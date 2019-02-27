@@ -15,17 +15,13 @@
 
     <mat-form-field>
       <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
-      <mat-hint>Start Date</mat-hint>
+      <mat-hint>Date</mat-hint>
     </mat-form-field>
     
-    <mat-form-field>
-      <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
-      <mat-hint>End Date</mat-hint>
-    </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Reccuring" ngModel name="rrule" #rruleTypeInput="ngModel" [(value)]="selectedRruleType">
-        <mat-option *ngFor="let type of rruleTypes" [value]="type" (onSelectionChange)="recurringSelected($event)">
+      <mat-select placeholder="Reccuring" ngModel name="freq" #rruleTypeInput="ngModel" [(value)]="selectedRruleType">
+        <mat-option *ngFor="let type of rruleTypes" [value]="type">
           {{type}}
         </mat-option>
       </mat-select>
@@ -33,8 +29,12 @@
     </mat-form-field>
   <div *ngIf="selectedRruleType !== 'NO REPEAT'">
     <mat-form-field>
-        <input matInput type="number" ngModel name="maxNumOfOccurences" required #maxNumOfOccurencesInput="ngModel" placeholder="1" min="0">
-        <mat-hint>Every {{maxNumOfOccurencesInput.value || 1}} - {{selectedRruleType}}</mat-hint>
+        <input matInput type="number" ngModel name="interval" required #intervalInput="ngModel" placeholder="1" min="0">
+        <mat-hint>Every {{intervalInput.value || 1}} - {{selectedRruleType}}</mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
+        <mat-hint>End Date</mat-hint>
       </mat-form-field>
   </div>
 

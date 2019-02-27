@@ -119,14 +119,26 @@
       "createdAt": 1550357836028
     },
     {
-      "title": "test",
-      "amount": 55,
-      "start": "2019-01-05",
-      "end": "2019-01-05",
-      "rrule": "",
-      "id": 58,
+      "title": "T2",
+      "amount": 90,
+      "start": "2019-02-01",
+      "rrule": null,
+      "id": 56,
       "expenseId": 0,
-      "createdAt": 1550358658946
+      "createdAt": 1551237164131
+    },
+    {
+      "title": "R-March",
+      "amount": 90,
+      "start": "2019-03-05",
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "until": "2019-03-29"
+      },
+      "id": 57,
+      "expenseId": 0,
+      "createdAt": 1551239734262
     }
   ]
 }

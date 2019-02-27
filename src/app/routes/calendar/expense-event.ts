@@ -1,21 +1,27 @@
 import { CalendarEvent } from 'calendar-utils';
-
+/**
+ * ExpenseEvent extends CalendarEvent & ExpenseRRule
+ *  -start
+ *  -end
+ *  -amount
+ *  -isActive
+ *  -allDay
+ *  -editable
+ */
 export interface ExpenseEvent extends CalendarEvent, ExpenseRRule {
-    expenseId: number;
+    expenseId?: number;
     title: string;
     amount: number;
-    endDate: string;
-    isActive: boolean;
+    isActive?: boolean;
 
     // Angular Calendar api requirements
-    allDay?: boolean;
     editable?: boolean;
 }
 
 
 export interface ExpenseRRule {
-    rrule: {
-        freq: any,
+    rrule?: {
+        freq?: any,
         bymonth?: number,
         bymonthday?: number,
         byweekday?: any
