@@ -2,41 +2,66 @@
 
 <div mat-dialog-content>
   <form #f="ngForm" (ngSubmit)="onSubmit(f)" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
-
-    <mat-form-field>
-      <input matInput type="text" ngModel name="title" required #titleInput="ngModel">
-      <mat-hint>Expense Title</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput type="number" ngModel name="amount" required #amountInput="ngModel">
-      <mat-hint>Expense Amount</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
-      <mat-hint>Date</mat-hint>
-    </mat-form-field>
-    
-
-    <mat-form-field>
-      <mat-select placeholder="Reccuring" ngModel name="freq" #rruleTypeInput="ngModel" [(value)]="selectedRruleType">
-        <mat-option *ngFor="let type of rruleTypes" [value]="type">
-          {{type}}
-        </mat-option>
-      </mat-select>
-      <mat-hint>Reoccuring Type</mat-hint>
-    </mat-form-field>
-  <div *ngIf="selectedRruleType !== 'NO REPEAT'">
-    <mat-form-field>
-        <input matInput type="number" ngModel name="interval" required #intervalInput="ngModel" placeholder="1" min="0">
-        <mat-hint>Every {{intervalInput.value || 1}} - {{selectedRruleType}}</mat-hint>
+    <mat-card>
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput type="text" ngModel name="title" required #titleInput="ngModel">
+          <mat-hint>Expense Title</mat-hint>
+        </mat-form-field>
+        <span class="spacer"></span>
+        <mat-form-field>
+          <input matInput type="number" ngModel name="amount" required #amountInput="ngModel">
+          <mat-hint>Expense Amount</mat-hint>
+        </mat-form-field>
+        <span class="spacer"></span>
+        
+        <mat-form-field>
+          <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
+          <mat-hint>Date</mat-hint>
+        </mat-form-field>
+        <span class="spacer"></span>
+        
+        <mat-form-field>
+          <mat-select placeholder="Reccuring" ngModel name="freq" #rruleTypeInput="ngModel"
+          [(value)]="selectedRruleType">
+          <mat-option *ngFor="let type of rruleTypes" [value]="type">
+            {{type}}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Reoccuring Type</mat-hint>
       </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+  <mat-card *ngIf="selectedRruleType !== 'NO REPEAT'">
+    <mat-card-content>
+      <section *ngIf="selectedRruleType == 'WEEKLY'" >
+        <h3 class="example-h2">Select the Days of the Week to Recur</h3>
+        <mat-checkbox class="example-margin" ngModel name="SU">Sun</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="MO">Mon</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="TU">Tues</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="WE">Wed</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="TH">Thurs</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="FR">Fri</mat-checkbox>
+        <span class="spacer"></span>
+        <mat-checkbox class="example-margin" ngModel name="SA">Sat</mat-checkbox>
+      </section>
+      <span class="spacer"></span>
       <mat-form-field>
-        <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
-        <mat-hint>End Date</mat-hint>
-      </mat-form-field>
-  </div>
+          <input matInput type="number" ngModel name="interval" required #intervalInput="ngModel" placeholder="1"
+            min="0">
+          <mat-hint>Every {{intervalInput.value || 1}} - {{selectedRruleType}}</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="date" ngModel name="end" required #endDateInput="ngModel">
+          <mat-hint>End Date</mat-hint>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
 
     <button type="submit" color="accent" [disabled]="f.invalid" mat-raised-button>Add Expense</button>
   </form>

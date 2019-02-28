@@ -1,0 +1,14 @@
+mat-card {
+    width: 80%;
+ }
+mat-card-content {
+    font-size: 1.2em;
+}
+mat-hint {
+    font-size: 1.2em;
+}
+
+.spacer {
+    display: inline-block;
+    width: 10px;
+}

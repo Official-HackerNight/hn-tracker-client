@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ExpenseEvent } from '../../expense-event';
 import RRule from 'rrule';
 import { NGXLogger } from 'ngx-logger';
 import moment from 'moment-timezone';
+import { ExpenseRRule, ExpenseEvent } from 'src/app/routes/calendar/expense-event';
+import { NgForm } from '@angular/forms';
 moment.tz.setDefault('Utc');
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class RruleService {
    *        0 to RRule.YEAR
    *        1 to RRule.MONTH
    *        2 to RRule.WEEKLY etc.
+   *        3 to RRule.DAILY etc.
    *  -byweekday:
    *    offset: SU -> RRule.MO
    *            MO -> RRule.TU etc.
@@ -60,6 +62,49 @@ export class RruleService {
     return events;
   }
 
+  /**
+   * Creates a new ExpenseRRule Object from an NgForm
+   *  e.g. freq: YEARLY -> 0
+   * @param form: NgForm
+   */
+  newExpenseRruleFormat(form: NgForm): ExpenseRRule {
+    console.log(form);
+    const expenseRrule: ExpenseRRule = {
+        freq: -1,
+        interval: -1,
+        dtstart: '',
+        until: ''
+    };
+    // set dtStart
+    expenseRrule.dtstart = form.value.start;
+
+    // set feq & fields of recurring type need e.g. MONTHLY -> bymonthday
+    switch (form.value.freq) {
+      case('YEARLY'): expenseRrule.freq = 0; break;
+      case('MONTHLY'):
+        expenseRrule.freq = 1;
+        expenseRrule.bymonthday = new Date(expenseRrule.dtstart).getDate() + 1; // new Date() offsets from 0;
+        break;
+      case('WEEKLY'):
+        expenseRrule.freq = 2;
+        expenseRrule.byweekday = [];
+        if (form.value.SU) { expenseRrule.byweekday.push('SU'); }
+        if (form.value.MO) { expenseRrule.byweekday.push('MO'); }
+        if (form.value.TU) { expenseRrule.byweekday.push('TU'); }
+        if (form.value.WE) { expenseRrule.byweekday.push('WE'); }
+        if (form.value.TH) { expenseRrule.byweekday.push('TH'); }
+        if (form.value.FR) { expenseRrule.byweekday.push('FR'); }
+        if (form.value.SA) { expenseRrule.byweekday.push('SA'); }
+        break;
+      case('DAILY'): expenseRrule.freq = 3; break;
+    }
+    // set interval
+    expenseRrule.interval = form.value.interval;
+
+    // set until date
+    expenseRrule.until = form.value.end;
+    return expenseRrule;
+  }
 
   addOneDay(date: Date | string) {
     return moment(new Date(date)).add(1, 'days').toDate();
@@ -113,4 +158,23 @@ export class RruleService {
   bymonthdayFormat(bmd: number): number {
     return bmd;
   }
+
+
+  /**
+   * Provide a start/end dates & RRule (Recurring Rules) to retrieve array of dates
+   */
+  getRecurringDates(rrule: ExpenseRRule, viewStart: Date, viewEnd: Date): any[] {
+    let rule = null;
+    try {
+        rule = new RRule({
+            ...rrule,
+            dtstart: viewStart,
+            until: viewEnd
+        });
+        return rule.all();
+    } catch (e) {
+        // logs the exception thrown when recurring events are 0
+        console.log(e);
+    }
+}
 }

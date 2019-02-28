@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ExpenseApiService } from '../../expense/services/expense-services/expense-api.service';
 import { ExpenseEvent, ExpenseRRule } from '../expense-event';
+import { RruleService } from 'src/app/shared/rrule/rrule.service';
 
 @Component({
   selector: 'app-calendar-new-expense',
@@ -25,28 +26,33 @@ export class CalendarNewExpenseComponent implements OnInit {
   selectedRruleType = 'NO REPEAT';
 
   constructor(
+    private rruleService: RruleService,
     private expenseApi: ExpenseApiService,
     public dialogRef: MatDialogRef<CalendarNewExpenseComponent>,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onSubmit(form: NgForm) {
     console.log(form.value);
     console.log(form.value.title);
+    console.log(form.value.weekly);
     console.log('selectedRruleType ' + this.selectedRruleType);
     this.newExpense.title = form.value.title;
     this.newExpense.amount = form.value.amount;
     this.newExpense.start = form.value.start;
 
-    this.newExpense.id = 0;
+    this.newExpense.id = 61;
     this.newExpense.expenseId = 0;
-    if ( this.selectedRruleType !== this.rruleTypes[0] ) {
-      this.newExpense.rrule = this.rruleFormat(form);
+
+    if (this.selectedRruleType !== this.rruleTypes[0]) {
+      this.newExpense.rrule = this.rruleService.newExpenseRruleFormat(form);
     } else {
       this.newExpense.rrule = null;
     }
+    console.log('new expense');
+    console.log(this.newExpense);
     this.dialogRef.close(this.newExpense);
   }
 
@@ -64,30 +70,6 @@ export class CalendarNewExpenseComponent implements OnInit {
     //   console.log(type);
     //   console.log(type.source.value);
     // }
-  }
-
-  rruleFormat(form: NgForm): {} {
-    debugger
-    console.log(form);
-    const expenseRrule: ExpenseRRule = {
-      rrule: {
-        freq: -1,
-        interval: -1,
-        until: ''
-      }
-    };
-    // set feq
-    switch (form.value.freq) {
-      case('YEARLY'): expenseRrule.rrule.freq = 0; break;
-      case('WEEKLY'): expenseRrule.rrule.freq = 1; break;
-      case('DAILY'): expenseRrule.rrule.freq = 2; break;
-    }
-    // set interval
-    expenseRrule.rrule.interval = form.value.interval;
-
-    // set until date
-    expenseRrule.rrule.until = form.value.end;
-    return expenseRrule.rrule;
   }
 
   onNoClick(): void {

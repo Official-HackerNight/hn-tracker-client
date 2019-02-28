@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ExpenseEvent } from '../expense-event';
-import { RruleService } from './rrule/rrule.service';
 import moment from 'moment-timezone';
 import RRule from 'rrule';
 import { NGXLogger } from 'ngx-logger';
+import { RruleService } from 'src/app/shared/rrule/rrule.service';
 moment.tz.setDefault('Utc');
 @Injectable({
   providedIn: 'root'
@@ -32,12 +32,11 @@ export class CalendarService {
     return this.httpClient.get(environment.expenseApiUrl + `calendar`);
   }
 
+
   persistExpense(expenseEvent: ExpenseEvent) {
-    console.log('adding expense: ');
-    console.log(expenseEvent);
-    // this.expenseSubject.next(expense);
-    this.httpClient.post(environment.expenseApiUrl + `calendar`, expenseEvent)
-      .toPromise().then(() => console.log('Expense created'));
+    this.logger.info('persisting expense ' + expenseEvent);
+    this.httpClient.post(environment.expenseApiUrl + 'calendar', expenseEvent)
+      .toPromise().then( () => console.log('expense persisted'));
   }
 
   /**
@@ -125,7 +124,6 @@ export class CalendarService {
    * @param arr: ExpenseEvent[]
    */
   removeDuplicates(arr: ExpenseEvent[]): ExpenseEvent[] {
-    // console.log(typeof arr[0].start);
     const result = arr.filter((thing, index, self) =>
       index === self.findIndex((t) => (
         t.title === thing.title && t.start.getTime() === thing.start.getTime()

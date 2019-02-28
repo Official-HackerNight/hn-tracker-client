@@ -109,36 +109,41 @@
       "rrule": ""
     },
     {
-      "title": "T",
-      "amount": 123,
-      "start": "2019-02-01",
-      "end": "2019-02-01",
-      "reccuringType": "",
-      "id": 55,
-      "expenseId": 0,
-      "createdAt": 1550357836028
-    },
-    {
-      "title": "T2",
-      "amount": 90,
-      "start": "2019-02-01",
-      "rrule": null,
-      "id": 56,
-      "expenseId": 0,
-      "createdAt": 1551237164131
-    },
-    {
       "title": "R-March",
-      "amount": 90,
-      "start": "2019-03-05",
+      "amount": 33,
+      "start": "2019-03-02",
       "rrule": {
         "freq": 1,
         "interval": 1,
-        "until": "2019-03-29"
+        "dtstart": "2019-03-02",
+        "until": "2019-05-02",
+        "bymonthday": 2
       },
-      "id": 57,
+      "id": 60,
       "expenseId": 0,
-      "createdAt": 1551239734262
+      "createdAt": 1551386044867
+    },
+    {
+      "title": "Weekly-March",
+      "amount": 333,
+      "start": "2019-03-02",
+      "rrule": {
+        "freq": 2,
+        "interval": 1,
+        "dtstart": "2019-03-02",
+        "until": "2019-03-19",
+        "byweekday": [
+          {
+            "weekday": 6
+          },
+          {
+            "weekday": 1
+          }
+        ]
+      },
+      "id": 61,
+      "expenseId": 0,
+      "createdAt": 1551395275302
     }
   ]
 }

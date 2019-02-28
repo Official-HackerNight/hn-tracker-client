@@ -1,20 +1,17 @@
-import { RruleService } from './services/rrule/rrule.service';
-import { Component, OnInit, Inject, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { CalendarService } from './services/calendar.service';
-import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
-import {
-    CalendarEvent, CalendarMonthViewDay,
-    CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent,
-    CalendarWeekViewBeforeRenderEvent, CalendarDayViewBeforeRenderEvent, CalendarView
-} from 'angular-calendar';
-import { Subject } from 'rxjs';
+import { CalendarDayViewBeforeRenderEvent, CalendarEventTimesChangedEvent,
+    CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
+import { ViewPeriod } from 'calendar-utils';
 import { isSameDay, isSameMonth } from 'date-fns';
 import moment from 'moment-timezone';
-import { ViewPeriod } from 'calendar-utils';
-import RRule from 'rrule';
-import { ExpenseEvent } from './expense-event';
 import { NGXLogger } from 'ngx-logger';
+import RRule from 'rrule';
+import { Subject } from 'rxjs';
+import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
+import { ExpenseEvent } from './expense-event';
+import { CalendarService } from './services/calendar.service';
+import { RruleService } from 'src/app/shared/rrule/rrule.service';
 moment.tz.setDefault('Utc');
 
 @Component({
@@ -44,8 +41,8 @@ export class CalendarComponent implements OnInit {
         panelClass: 'new-expense-modal',
         hasBackdrop: true,
         backdropClass: '',
-        width: '500px',
-        height: '',
+        width: '80%',
+        height: '80%',
         minWidth: '',
         minHeight: '',
         maxWidth: '100%',
@@ -183,8 +180,14 @@ export class CalendarComponent implements OnInit {
                 const e = { ...event };
                 e.rrule = { ...e.rrule };
 
+                // dtStart - view date or recurring? & set to the 17th hour to prevent daylight saving time issue
+                let newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart, viewRender.period.start, e.rrule.freq);
+                newDtStart = moment(newDtStart).hour(17).toDate();
+                // dtUntil same as start
+                const newDtUntil = this.calendarService.calReccuringEventEndDate(e.rrule.until, viewRender.period.end);
+
                 // Setup event recurring rule
-                const recurringDates = this.getRecurringDates(e, viewRender.period.start, viewRender.period.end);
+                const recurringDates = this.rruleService.getRecurringDates(e.rrule, newDtStart, newDtUntil);
                 recurringDates.forEach(date => {
                     const e1: ExpenseEvent = { ...e };
                     e1.start = moment(date).toDate();
@@ -194,32 +197,6 @@ export class CalendarComponent implements OnInit {
         });
     }
 
-    /** */
-    getRecurringDates(e: ExpenseEvent, viewStart: Date, viewEnd: Date): any[] {
-        console.log('---------------------');
-        console.log(' getRecurringDates()');
-        console.log('estart/end & viewstart/end');
-        console.log(e.rrule.dtstart + ' ' + e.rrule.until);
-        console.log( viewStart + ' ' + viewEnd);
-        const newDtStart = this.calendarService.calReccuringEventStartDate(e.rrule.dtstart, viewStart, e.rrule.freq);
-        const newDtUntil = this.calendarService.calReccuringEventEndDate(e.rrule.until, viewEnd);
-        console.log('selected start date' + newDtStart);
-        console.log('selected until date' + newDtUntil);
-        let rule = null;
-        try {
-            rule = new RRule({
-                ...e.rrule,
-                dtstart: moment(newDtStart).hour(17).toDate(),
-                until: newDtUntil
-            });
-            console.log(rule);
-            console.log(rule.all());
-            return rule.all();
-        } catch (e) {
-            // logs the exception thrown when recurring events are 0
-            console.log(e);
-        }
-    }
 
     /**
      *

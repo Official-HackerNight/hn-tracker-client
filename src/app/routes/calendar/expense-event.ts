@@ -8,27 +8,27 @@ import { CalendarEvent } from 'calendar-utils';
  *  -allDay
  *  -editable
  */
-export interface ExpenseEvent extends CalendarEvent, ExpenseRRule {
+export interface ExpenseEvent extends CalendarEvent {
     expenseId?: number;
     title: string;
     amount: number;
     isActive?: boolean;
-
+    rrule: ExpenseRRule;
     // Angular Calendar api requirements
     editable?: boolean;
 }
 
 
 export interface ExpenseRRule {
-    rrule?: {
-        freq?: any,
-        bymonth?: number,
-        bymonthday?: number,
-        byweekday?: any
-        wkst?: any,
-        dtstart?: any,
-        until?: any,
-        interval?: number
+        freq: any;
+        interval: number;
+        dtstart: any;
+        until: any;
+
+        bymonth?: number;
+        bymonthday?: number;
+        byweekday?: any[];
+        wkst?: any;
         // old still need ?
         separationCount?: number;
         maxNumOfOccurences?: number;
@@ -36,5 +36,4 @@ export interface ExpenseRRule {
         weekOfMonth?: number;
         dayOfMonth?: number;
         monthOfYear?: number;
-    };
 }
