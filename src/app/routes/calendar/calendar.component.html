@@ -5,12 +5,6 @@
 <app-calendar-header [(view)]="view" [(viewDate)]="viewDate">
 </app-calendar-header>
 
-<div class="text-center">
-  <button class="btn btn-primary" (click)="refreshView()">
-    Refresh + re-render the current view 
-  </button>
-</div>
-
 <div [ngSwitch]="view">
   <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" 
     (eventTimesChanged)="eventTimesChanged($event)" [events]="events" [refresh]="refresh" 
