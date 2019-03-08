@@ -13,15 +13,16 @@ moment.tz.setDefault('Utc');
 })
 export class CalendarService {
 
+  public events: ExpenseEvent[] = [];
+  public ogEvents: ExpenseEvent[] = [];
+
   private calendarEventSubject = new BehaviorSubject<any>([]);
   calendarEvent$: Observable<ExpenseEvent> = this.calendarEventSubject.asObservable();
-  profile: any;
 
   constructor(private httpClient: HttpClient, private rruleService: RruleService, private logger: NGXLogger) { }
 
-  fetchCalendarEventsPromise(id: string) {
-    this.httpClient.get(environment.expenseApiUrl + `calendar/${id}`)
-      .toPromise().then(data => console.log(data));
+  fetchCalendarEventsPromise(): Promise<ExpenseEvent[]> {
+    return this.httpClient.get<ExpenseEvent[]>(environment.expenseApiUrl + `calendar`).toPromise<ExpenseEvent[]>();
   }
 
   /**
@@ -47,7 +48,7 @@ export class CalendarService {
    *  -use Rrule Formater
    * @param expenseEvent: ExpenseEvent[]
    */
-  processCalendarEvents(expenseEvent: ExpenseEvent[]): ExpenseEvent[] {
+   processCalendarEvents(): void {
     this.logger.trace(`
     ****************************************
     * processCalendarEvents()
@@ -59,12 +60,20 @@ export class CalendarService {
     *  -removeDuplicates()
     ***
     `);
-    // format ExpenseEvents
-    expenseEvent = this.addNgCalFields(expenseEvent);
-    // rruleFormater - take data from DB and Format with RRule
-    expenseEvent = this.rruleService.rruleFormater(expenseEvent);
+    // return await this.fetchCalendarEvents();
+    this.fetchCalendarEvents().subscribe(data => {
+      // Set Original DB Events to new object reference
+      this.ogEvents = data;
+      // format ExpenseEvents
+      this.ogEvents = this.addNgCalFields(this.ogEvents);
+      // rruleFormater - take data from DB and Format with RRule
+      this.ogEvents = this.rruleService.rruleFormater(this.ogEvents);
 
-    return expenseEvent;
+      this.logger.info(`Original DB Events Formatted`);
+      console.log('process ogEvents:');
+      console.log(this.ogEvents);
+      this.calendarEventSubject.next(data);
+    });
   }
 
   /**
@@ -72,8 +81,8 @@ export class CalendarService {
    *  -editable
    * @param expenseEvent: ExpenseEvent[]
    */
-  private addNgCalFields(expenseEvent: ExpenseEvent[]) {
-    expenseEvent = expenseEvent.map(e => {
+   addNgCalFields(expenseEvents: ExpenseEvent[]): ExpenseEvent[] {
+    expenseEvents = expenseEvents.map(e => {
       return {
         ...e,
         title: e.title + ': $' + e.amount,
@@ -84,7 +93,7 @@ export class CalendarService {
         end: e.end && this.validDayFormat(e.end),
       };
     });
-    return expenseEvent;
+    return expenseEvents;
   }
 
 

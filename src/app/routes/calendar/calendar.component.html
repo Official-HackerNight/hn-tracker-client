@@ -1,21 +1,16 @@
-<section>
-  <button mat-raised-button (click)="openNewExpenseDialog()">New Expense</button>
-</section>
-
 <app-calendar-header [(view)]="view" [(viewDate)]="viewDate">
 </app-calendar-header>
-
 <div [ngSwitch]="view">
   <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" 
-    (eventTimesChanged)="eventTimesChanged($event)" [events]="events" [refresh]="refresh" 
+    (eventTimesChanged)="eventTimesChanged($event)" [events]="calendarService.events" [refresh]="refresh" 
     [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" 
     (beforeViewRender)="updateCalendarEvents($event)">
     
   </mwl-calendar-month-view>
 
-  <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" [refresh]="refresh">
+  <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calendarService.events" [refresh]="refresh">
   </mwl-calendar-week-view>
 
-  <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [refresh]="refresh">
+  <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calendarService.events" [refresh]="refresh">
   </mwl-calendar-day-view>
 </div>

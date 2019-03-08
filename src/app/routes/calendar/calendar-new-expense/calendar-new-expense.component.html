@@ -1,4 +1,5 @@
 <h1 mat-dialog-title>Create New Expense</h1>
+<h4>Today: {{today}}</h4>
 
 <div mat-dialog-content>
   <form #f="ngForm" (ngSubmit)="onSubmit(f)" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
@@ -14,9 +15,9 @@
           <mat-hint>Expense Amount</mat-hint>
         </mat-form-field>
         <span class="spacer"></span>
-        
+   
         <mat-form-field>
-          <input matInput type="date" ngModel name="start" required #startDateInput="ngModel">
+          <input matInput type="date" ngModel name="start" required #startDateInput="ngModel"  [(ngModel)]="today" placeholder=" " >
           <mat-hint>Date</mat-hint>
         </mat-form-field>
         <span class="spacer"></span>

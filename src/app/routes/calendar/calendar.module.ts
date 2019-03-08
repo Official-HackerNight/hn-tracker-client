@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarComponent } from './calendar.component';
 import { MatFormFieldModule, MatDialogModule } from '@angular/material';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarNewExpenseComponent } from './calendar-new-expense/calendar-new-expense.component';
 import { NgMaterialModule } from 'src/app/shared/ng-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,6 +22,7 @@ export function momentAdapterFactory() {
     MatDialogModule,
     MatFormFieldModule,
     FormsModule,
+    ReactiveFormsModule,
     NgMaterialModule,
     FlexLayoutModule,
     CM.forRoot({

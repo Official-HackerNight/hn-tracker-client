@@ -12,6 +12,9 @@
   </div>
   <div id="calDate" fxLayout="row" fxLayoutAlign="center center">
     <h1>{{ viewDate | calendarDate: view + 'ViewTitle':locale }}</h1>
+    <section>
+      <button mat-raised-button (click)="openNewExpenseDialog()">New Expense</button>
+    </section>
   </div>
   <div id="calPevTdNxt" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
     <div class="hover-grey" fxFlex="20" fxLayoutAlign="end end" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" 

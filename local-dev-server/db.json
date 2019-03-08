@@ -144,6 +144,24 @@
       "id": 61,
       "expenseId": 0,
       "createdAt": 1551395275302
+    },
+    {
+      "title": "m7",
+      "amount": 7,
+      "start": "2019-03-07",
+      "rrule": null,
+      "id": 62,
+      "expenseId": 0,
+      "createdAt": 1551998340790
+    },
+    {
+      "title": "Test",
+      "amount": 55,
+      "start": "2019-03-14",
+      "rrule": null,
+      "id": 63,
+      "expenseId": 0,
+      "createdAt": 1552005156706
     }
   ]
 }

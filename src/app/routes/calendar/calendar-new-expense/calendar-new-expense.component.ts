@@ -1,16 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ExpenseApiService } from '../../expense/services/expense-services/expense-api.service';
 import { ExpenseEvent, ExpenseRRule } from '../expense-event';
 import { RruleService } from 'src/app/shared/rrule/rrule.service';
-
+import moment from 'moment-timezone';
+moment.tz.setDefault('Utc');
 @Component({
   selector: 'app-calendar-new-expense',
   templateUrl: './calendar-new-expense.component.html',
   styleUrls: ['./calendar-new-expense.component.css']
 })
 export class CalendarNewExpenseComponent implements OnInit {
+  // today = new FormControl(new Date());
+  today = moment().format('YYYY-MM-DD');
+  // today = moment().format('MM-DD-YYYY');
   newExpense: ExpenseEvent = {
     title: '',
     amount: 0,
@@ -43,7 +47,7 @@ export class CalendarNewExpenseComponent implements OnInit {
     this.newExpense.amount = form.value.amount;
     this.newExpense.start = form.value.start;
 
-    this.newExpense.id = 61;
+    this.newExpense.id = 0;
     this.newExpense.expenseId = 0;
 
     if (this.selectedRruleType !== this.rruleTypes[0]) {
