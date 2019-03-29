@@ -162,6 +162,15 @@
       "id": 63,
       "expenseId": 0,
       "createdAt": 1552005156706
+    },
+    {
+      "title": "M-27-Single",
+      "amount": 27,
+      "start": "2019-03-27",
+      "rrule": null,
+      "id": 64,
+      "expenseId": 0,
+      "createdAt": 1553698250800
     }
   ]
 }
