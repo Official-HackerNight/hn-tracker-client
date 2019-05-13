@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "TempAngular7": {
+    "HNTrackerClient": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/TempAngular7",
+            "outputPath": "dist/HNTrackerClient",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "TempAngular7:build"
+            "browserTarget": "HNTrackerClient:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "TempAngular7:build:production"
+              "browserTarget": "HNTrackerClient:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "TempAngular7:build"
+            "browserTarget": "HNTrackerClient:build"
           }
         },
         "test": {
@@ -107,7 +107,7 @@
         }
       }
     },
-    "TempAngular7-e2e": {
+    "HNTrackerClient-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -116,11 +116,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "TempAngular7:serve"
+            "devServerTarget": "HNTrackerClient:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "TempAngular7:serve:production"
+              "devServerTarget": "HNTrackerClient:serve:production"
             }
           }
         },
@@ -136,5 +136,5 @@
       }
     }
   },
-  "defaultProject": "TempAngular7"
+  "defaultProject": "HNTrackerClient"
 }

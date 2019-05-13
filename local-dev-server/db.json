@@ -170,7 +170,29 @@
       "rrule": null,
       "id": 64,
       "expenseId": 0,
-      "createdAt": 1553698250800
+      "createdAt": 1553698250800,
+      "title": "A24 Single",
+      "amount": 24,
+      "start": "2019-04-24",
+      "rrule": null,
+      "id": 64,
+      "expenseId": 0,
+      "createdAt": 1556070565304
+    },
+    {
+      "title": "A23 2months",
+      "amount": 23,
+      "start": "2019-04-23",
+      "rrule": {
+        "freq": 1,
+        "interval": 1,
+        "dtstart": "2019-04-23",
+        "until": "2019-05-23",
+        "bymonthday": 23
+      },
+      "id": 65,
+      "expenseId": 0,
+      "createdAt": 1556070613674
     }
   ]
 }
