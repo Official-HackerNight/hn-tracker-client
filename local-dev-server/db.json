@@ -164,13 +164,6 @@
       "createdAt": 1552005156706
     },
     {
-      "title": "M-27-Single",
-      "amount": 27,
-      "start": "2019-03-27",
-      "rrule": null,
-      "id": 64,
-      "expenseId": 0,
-      "createdAt": 1553698250800,
       "title": "A24 Single",
       "amount": 24,
       "start": "2019-04-24",
@@ -193,6 +186,15 @@
       "id": 65,
       "expenseId": 0,
       "createdAt": 1556070613674
+    },
+    {
+      "title": "55 j16",
+      "amount": 200,
+      "start": "2019-06-16",
+      "rrule": null,
+      "id": 66,
+      "expenseId": 0,
+      "createdAt": 1560725992658
     }
   ]
 }

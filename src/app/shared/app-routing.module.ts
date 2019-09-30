@@ -17,7 +17,7 @@ const routes: Routes = [
     component: ExpenseComponent,
     canActivate: [AuthGuardService],
     children: [
-      { path: 'expense', loadChildren: '../routes/expense/expense.module#ExpenseModule' },
+      { path: 'expense', loadChildren: () => import('../routes/expense/expense.module').then(m => m.ExpenseModule) },
       // { path: '**', pathMatch: 'full', redirectTo: '/dashboard', canActivate: [AuthGuardService] }
     ]
   },
@@ -26,7 +26,7 @@ const routes: Routes = [
     component: CalendarComponent,
     canActivate: [AuthGuardService],
     children: [
-      { path: 'calendar', loadChildren: '../routes/calendar/calendar.module#CalendarModule' },
+      { path: 'calendar', loadChildren: () => import('../routes/calendar/calendar.module').then(m => m.CalendarModule) },
     ]
   }
 ];
