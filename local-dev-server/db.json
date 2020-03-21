@@ -164,15 +164,6 @@
       "createdAt": 1552005156706
     },
     {
-      "title": "A24 Single",
-      "amount": 24,
-      "start": "2019-04-24",
-      "rrule": null,
-      "id": 64,
-      "expenseId": 0,
-      "createdAt": 1556070565304
-    },
-    {
       "title": "A23 2months",
       "amount": 23,
       "start": "2019-04-23",
@@ -195,6 +186,10 @@
       "id": 66,
       "expenseId": 0,
       "createdAt": 1560725992658
+    },
+    {
+      "createdAt": 1569793008936,
+      "id": 67
     }
   ]
 }
