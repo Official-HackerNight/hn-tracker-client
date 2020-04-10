@@ -25,7 +25,7 @@
     "@angular/platform-browser-dynamic": "^8.2.8",
     "@angular/router": "^8.2.8",
     "angular-calendar": "^0.26.11",
-    "auth0-js": "^9.11.3",
+    "auth0-js": "^9.13.2",
     "calendar-utils": "^0.2.3",
     "core-js": "^2.6.9",
     "date-fns": "^1.30.1",
